@@ -1,13 +1,11 @@
 package reviewbot.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import reviewbot.dao.BookDAO;
-import reviewbot.model.Book;
+import reviewbot.dao.ReviewDAO;
+import reviewbot.model.Review;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,25 +14,23 @@ import java.util.List;
  * Created by jtidwell on 4/6/2015.
  */
 @RestController
-@RequestMapping("/books")
-public class BookController {
-
+@RequestMapping("/reviews")
+public class ReviewController {
     @Autowired
-    private BookDAO _bookDAO;
+    private ReviewDAO _reviewDAO;
 
-    @RequestMapping(method=RequestMethod.GET)
-    public List<Book> listBook() {
+    @RequestMapping(method= RequestMethod.GET)
+    public List<Review> listReview() {
 
-        List<Book> books = new ArrayList<Book>();
+        List<Review> reviews = new ArrayList<Review>();
 
         try {
-            books = _bookDAO.getAll();
+            reviews = _reviewDAO.getAll();
         }
         catch(Exception e) {
             e.printStackTrace();
         }
 
-        return books;
+        return reviews;
     }
-
 }
