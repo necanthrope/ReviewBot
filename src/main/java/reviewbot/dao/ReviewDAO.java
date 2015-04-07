@@ -1,12 +1,19 @@
 package reviewbot.dao;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate4.HibernateCallback;
+import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import reviewbot.model.Review;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.security.spec.ECField;
 import java.util.List;
 
 /**
@@ -14,34 +21,62 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class ReviewDAO {
+public class ReviewDAO extends HibernateDaoSupport{
 
     @Autowired
-    private SessionFactory _sessionFactory;
-
-    private Session getSession() {
-        return _sessionFactory.getCurrentSession();
+    public void init(SessionFactory factory) {
+        setSessionFactory(factory);
     }
 
-    public void save(Review review) {
-        getSession().save(review);
+    // An EntityManager will be automatically injected from entityManagerFactory
+    // setup on DatabaseConfig class.
+    @PersistenceContext
+    private EntityManager _entityManager;
+
+
+    private Session getSession() {
+
+        //return _sessionFactory.getCurrentSession();
+        return getSessionFactory().getCurrentSession();
+    }
+
+    public void create(Review review) {
+        _entityManager.persist(review);
     }
 
     public void delete(Review review) {
-        getSession().delete(review);
+        if(_entityManager.contains(review))
+            _entityManager.remove(review);
+        else
+            _entityManager.remove(_entityManager.merge(review));
     }
 
     @SuppressWarnings("unchecked")
     public List getAll() {
-        return getSession().createQuery("from Review").list();
+        return _entityManager.createQuery("from Review").getResultList();
+    }
+
+    public List<Review> getByRange(Integer length, Integer offset) {
+
+        final Integer len = length;
+        final Integer offs = offset;
+
+        return (List<Review>) getHibernateTemplate().execute(new HibernateCallback() {
+            public Object doInHibernate(Session session) throws HibernateException {
+                Query q = session.createQuery("from Review");
+                q.setFirstResult(offs);
+                q.setMaxResults(len);
+                return q.list();
+            }
+        });
     }
 
     public Review getById(long id) {
-        return (Review) getSession().load(Review.class, id);
+        return _entityManager.find(Review.class, id);
     }
 
     public void update(Review review) {
-        getSession().update(review);
+        _entityManager.merge(review);
     }
 
 

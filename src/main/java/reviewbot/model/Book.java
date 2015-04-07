@@ -9,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * Created by jtidwell on 4/6/2015.
@@ -23,7 +21,7 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     //private long id;
-    private Integer id;
+    private Long id;
 
     private Integer userId;
 
@@ -55,11 +53,11 @@ public class Book {
     private String free;
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

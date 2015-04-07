@@ -16,7 +16,7 @@ public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @NotNull
     private Integer userId;
@@ -44,11 +44,11 @@ public class Review {
     @Column(name = "notes", length = 20000)
     private String notes;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
