@@ -21,17 +21,7 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class BookDAO extends HibernateDaoSupport{
-
-    // An EntityManager will be automatically injected from entityManagerFactory
-    // setup on DatabaseConfig class.
-    @PersistenceContext
-    private EntityManager _entityManager;
-
-    @Autowired
-    public void init(SessionFactory factory) {
-        setSessionFactory(factory);
-    }
+public class BookDAO extends AbstractDAO<Book>{
 
     public void create(Book book) {
         _entityManager.persist(book);

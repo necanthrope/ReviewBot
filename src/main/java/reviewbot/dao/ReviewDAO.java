@@ -21,35 +21,9 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class ReviewDAO extends HibernateDaoSupport{
-
-    @Autowired
-    public void init(SessionFactory factory) {
-        setSessionFactory(factory);
-    }
-
-    // An EntityManager will be automatically injected from entityManagerFactory
-    // setup on DatabaseConfig class.
-    @PersistenceContext
-    private EntityManager _entityManager;
+public class ReviewDAO extends AbstractDAO<Review>{
 
 
-    private Session getSession() {
-
-        //return _sessionFactory.getCurrentSession();
-        return getSessionFactory().getCurrentSession();
-    }
-
-    public void create(Review review) {
-        _entityManager.persist(review);
-    }
-
-    public void delete(Review review) {
-        if(_entityManager.contains(review))
-            _entityManager.remove(review);
-        else
-            _entityManager.remove(_entityManager.merge(review));
-    }
 
     @SuppressWarnings("unchecked")
     public List getAll() {
@@ -75,9 +49,19 @@ public class ReviewDAO extends HibernateDaoSupport{
         return _entityManager.find(Review.class, id);
     }
 
+    public void create(Review review) {
+        _entityManager.persist(review);
+    }
+
     public void update(Review review) {
         _entityManager.merge(review);
     }
 
+    public void delete(Review review) {
+        if(_entityManager.contains(review))
+            _entityManager.remove(review);
+        else
+            _entityManager.remove(_entityManager.merge(review));
+    }
 
 }
