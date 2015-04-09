@@ -51,7 +51,7 @@ public class ReviewController {
             return review;
         }
 
-        review = _reviewDAO.readOne(new Long(Integer.parseInt(idStr)));
+        review = _reviewDAO.readOne(new Integer(Integer.parseInt(idStr)));
         return review;
 
     }

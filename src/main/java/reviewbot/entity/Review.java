@@ -22,39 +22,41 @@ public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
 
     @NotNull
+    @Column(name = "user_id")
     private Integer userId;
 
     @NotNull
+    @Column(name = "book_id")
     private Integer bookId;
 
     @NotNull
-    @Column(name = "body", length = 20000)
+    @Column(name = "body", columnDefinition = "longtext")
     private String body;
 
     @Size(min = 1, max=3)
     private String rating;
 
     @Column
-    @Type(type="date")
-    //@Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date create_date;
 
     @Size(min = 1, max=1)
     private String crossposted;
 
+    @Column(name = "wp_post_id")
     private Integer wp_postId;
 
-    @Column(name = "notes", length = 20000)
+    @Column(name = "notes", columnDefinition= "longtext")
     private String notes;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class ReviewDAO extends AbstractDAO<Integer, Long, Review>{
+public class ReviewDAO extends AbstractDAO<Integer, Integer, Review>{
 
     @Override
     public void create(Review review) {
@@ -29,12 +29,12 @@ public class ReviewDAO extends AbstractDAO<Integer, Long, Review>{
     }
 
     @Override
-    public Review readOne(Long id) {
+    public Review readOne(Integer id) {
         return _entityManager.find(Review.class, id);
     }
 
     @Override
-    public List<Review> readList(Long[] ids) {
+    public List<Review> readList(Integer[] ids) {
         return null;
     }
 

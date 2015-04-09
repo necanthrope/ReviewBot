@@ -18,20 +18,20 @@ public class Theme {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long theme;
+    private Integer theme;
 
     @Size(min = 1, max=30)
     private String name;
 
-    @Column(name = "description", length = 20000)
+    @Column(name = "description", columnDefinition="text" )
     private String description;
 
 
-    public Long getTheme() {
+    public Integer getTheme() {
         return theme;
     }
 
-    public void setTheme(Long theme) {
+    public void setTheme(Integer theme) {
         this.theme = theme;
     }
 

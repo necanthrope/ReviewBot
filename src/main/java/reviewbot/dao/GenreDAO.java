@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class GenreDAO extends AbstractDAO<Integer, Long, Genre> {
+public class GenreDAO extends AbstractDAO<Integer, Integer, Genre> {
 
     @Override
     public void create(Genre genre) {
@@ -31,14 +31,14 @@ public class GenreDAO extends AbstractDAO<Integer, Long, Genre> {
     }
 
     @Override
-    public Genre readOne(Long id) {
+    public Genre readOne(Integer id) {
         return null;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Genre> readList(Long[] idsIn) {
-        final Long[] ids = idsIn;
+    public List<Genre> readList(Integer[] idsIn) {
+        final Integer[] ids = idsIn;
         return (List<Genre>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
                 Criteria criteria = session.createCriteria(Genre.class);

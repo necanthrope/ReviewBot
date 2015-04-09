@@ -71,7 +71,7 @@ public class BookController {
             return book;
         }
 
-        book = _bookDAO.readOne(new Long(Integer.parseInt(idStr)));
+        book = _bookDAO.readOne(new Integer(Integer.parseInt(idStr)));
         return book;
 
     }

@@ -23,21 +23,21 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class ThemeDAO  extends AbstractDAO<Integer, Long, Theme>{
+public class ThemeDAO  extends AbstractDAO<Integer, Integer, Theme>{
     @Override
     public void create(Theme theme) {
         
     }
 
     @Override
-    public Theme readOne(Long id) {
+    public Theme readOne(Integer id) {
         return null;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Theme> readList(Long[] idsIn) {
-        final Long[] ids = idsIn;
+    public List<Theme> readList(Integer[] idsIn) {
+        final Integer[] ids = idsIn;
         return (List<Theme>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
                 Criteria criteria = session.createCriteria(Theme.class);

@@ -19,20 +19,20 @@ public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     //private long id;
-    private Long id;
+    private Short id;
 
     @Size(min = 1, max=30)
     private String name;
 
-    @Column(name = "description", length = 20000)
+    @Column(name = "description", columnDefinition="text")
     private String description;
 
 
-    public Long getId() {
+    public Short getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Short id) {
         this.id = id;
     }
 

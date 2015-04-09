@@ -26,8 +26,9 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id")
     //private long id;
-    private Long id;
+    private Integer id;
 
+		@Column(name="user_id")
     private Integer userId;
 
     @NotNull
@@ -44,14 +45,15 @@ public class Book {
     @Size(min = 1, max=13)
     private String isbn;
 
-    private Integer genre;
+    private Byte genre;
 
-    private Integer subgenre;
+    private Byte subgenre;
 
     @Size(min = 1, max=4)
     private String year;
 
     @Size(min = 1, max=127)
+		@Column(name="master_id")
     private String masterId;
 
     @Size(min = 1, max=5)
@@ -70,12 +72,12 @@ public class Book {
 
 
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -119,19 +121,19 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public Integer getGenre() {
+    public Byte getGenre() {
         return genre;
     }
 
-    public void setGenre(Integer genre) {
+    public void setGenre(Byte genre) {
         this.genre = genre;
     }
 
-    public Integer getSubgenre() {
+    public Byte getSubgenre() {
         return subgenre;
     }
 
-    public void setSubgenre(Integer subgenre) {
+    public void setSubgenre(Byte subgenre) {
         this.subgenre = subgenre;
     }
 

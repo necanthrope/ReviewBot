@@ -81,18 +81,18 @@ public class MetadataController {
 
     /**
      * All the metadata tables have a similar structure. This parses a commma
-     * separated string of ID values into a Long array, to be used by the DAO
+     * separated string of ID values into a Integer array, to be used by the DAO
      * when querying the metadata tables.
      *
      * @param idsIn a comma separated string of id values
-     * @return Long array of requested ID values
+     * @return Integer array of requested ID values
      */
-    private Long[] parseIds (String idsIn) {
-        List<Long> idLongList = new ArrayList<>();
+    private Integer[] parseIds (String idsIn) {
+        List<Integer> idInteger = new ArrayList<>();
         String[] idStrings = idsIn.split(",");
         for (String idStr : idStrings) {
-            idLongList.add(Long.parseLong(idStr));
+            idInteger.add(Integer.parseInt(idStr));
         }
-        return idLongList.toArray(new Long[0]);
+        return idInteger.toArray(new Integer[0]);
     }
 }

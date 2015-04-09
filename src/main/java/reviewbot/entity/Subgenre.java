@@ -18,20 +18,20 @@ public class Subgenre {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long subgenre;
+    private Integer subgenre;
 
     @Size(min = 1, max=30)
     private String name;
 
-    @Column(name = "description", length = 20000)
+    @Column(name = "description", columnDefinition="text")
     private String description;
 
 
-    public Long getSubgenre() {
+    public Integer getSubgenre() {
         return subgenre;
     }
 
-    public void setSubgenre(Long subgenre) {
+    public void setSubgenre(Integer subgenre) {
         this.subgenre = subgenre;
     }
 
