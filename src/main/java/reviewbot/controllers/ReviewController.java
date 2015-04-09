@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2015. ReviewBot by Jeremy Tidwell is licensed under a Creative Commons
+ * Attribution-NonCommercial-ShareAlike 4.0 International License.
+ * Based on a work at https://github.com/necanthrope/ReviewBot.
+ */
+
 package reviewbot.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reviewbot.dao.ReviewDAO;
-import reviewbot.model.Review;
+import reviewbot.entity.Review;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +31,7 @@ public class ReviewController {
         List<Review> reviews = new ArrayList<Review>();
 
         try {
-            reviews = _reviewDAO.getAll();
+            reviews = _reviewDAO.readAll();
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -36,16 +42,16 @@ public class ReviewController {
 
     @RequestMapping(value="/review", method=RequestMethod.GET, produces="application/json")
     public Review getReviewById(
-            @RequestParam(value="id") String id) {
+            @RequestParam(value="id") String idStr) {
 
         Review review;
 
-        if(id == null) {
+        if(idStr == null) {
             review =  new Review();
             return review;
         }
 
-        review = _reviewDAO.getById(new Long(Integer.parseInt(id)));
+        review = _reviewDAO.readOne(new Long(Integer.parseInt(idStr)));
         return review;
 
     }

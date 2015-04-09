@@ -1,4 +1,10 @@
-package reviewbot.model;
+/*
+ * Copyright (c) 2015. ReviewBot by Jeremy Tidwell is licensed under a Creative Commons
+ * Attribution-NonCommercial-ShareAlike 4.0 International License.
+ * Based on a work at https://github.com/necanthrope/ReviewBot.
+ */
+
+package reviewbot.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -7,13 +13,12 @@ import javax.validation.constraints.Size;
  * Created by jtidwell on 4/7/2015.
  */
 @Entity
-@Table(name="genres")
-public class Genre {
+@Table(name="themes")
+public class Theme {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    //private long id;
-    private Long id;
+    private Long theme;
 
     @Size(min = 1, max=30)
     private String name;
@@ -22,12 +27,12 @@ public class Genre {
     private String description;
 
 
-    public Long getId() {
-        return id;
+    public Long getTheme() {
+        return theme;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setTheme(Long theme) {
+        this.theme = theme;
     }
 
     public String getName() {

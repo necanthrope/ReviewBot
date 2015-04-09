@@ -1,14 +1,18 @@
-package reviewbot.model;
+/*
+ * Copyright (c) 2015. ReviewBot by Jeremy Tidwell is licensed under a Creative Commons
+ * Attribution-NonCommercial-ShareAlike 4.0 International License.
+ * Based on a work at https://github.com/necanthrope/ReviewBot.
+ */
+
+package reviewbot.entity;
 
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by jtidwell on 4/6/2015.
@@ -20,6 +24,7 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
     //private long id;
     private Long id;
 
@@ -53,9 +58,22 @@ public class Book {
     private String free;
 
 
+    @OneToMany(fetch = FetchType.EAGER)//,
+            //cascade = CascadeType.ALL, targetEntity = GenreMap.class)
+    @JoinTable(
+            name="genre_map",
+            joinColumns=@JoinColumn(name="id"),
+            inverseJoinColumns = @JoinColumn( name="book_id")
+
+    )
+    private List<GenreMap> genreMap;
+
+
+
     public Long getId() {
         return id;
     }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -139,6 +157,14 @@ public class Book {
 
     public void setFree(String free) {
         this.free = free;
+    }
+
+    public List<GenreMap> getGenreMap() {
+        return genreMap;
+    }
+
+    public void setGenreMaps(List<GenreMap> genreMaps) {
+        this.genreMap = genreMaps;
     }
 
     @Override

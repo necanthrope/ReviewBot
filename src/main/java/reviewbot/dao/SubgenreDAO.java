@@ -13,36 +13,36 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
-import reviewbot.entity.Genre;
+import reviewbot.entity.Subgenre;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
 /**
- * Created by jtidwell on 4/7/2015.
+ * Created by jtidwell on 4/8/2015.
  */
 @Repository
 @Transactional
-public class GenreDAO extends AbstractDAO<Integer, Long, Genre> {
+public class SubgenreDAO extends AbstractDAO<Integer, Long, Subgenre>{
 
     @Override
-    public void create(Genre genre) {
+    public void create(Subgenre subgenre) {
 
     }
 
     @Override
-    public Genre readOne(Long id) {
+    public Subgenre readOne(Long id) {
         return null;
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public List<Genre> readList(Long[] idsIn) {
+    @Override
+    public List<Subgenre> readList(Long[] idsIn) {
         final Long[] ids = idsIn;
-        return (List<Genre>) getHibernateTemplate().execute(new HibernateCallback() {
+        return (List<Subgenre>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
-                Criteria criteria = session.createCriteria(Genre.class);
-                criteria.add(Restrictions.in("id",ids));
+                Criteria criteria = session.createCriteria(Subgenre.class);
+                criteria.add(Restrictions.in("subgenre", ids));
                 criteria.addOrder(Order.asc("name"));
                 return criteria.list();
             }
@@ -50,23 +50,22 @@ public class GenreDAO extends AbstractDAO<Integer, Long, Genre> {
     }
 
     @Override
-    public List<Genre> readRange(Integer offset, Integer length) {
+    public List<Subgenre> readRange(Integer offset, Integer length) {
         return null;
     }
 
     @Override
-    public List<Genre> readAll() {
+    public List<Subgenre> readAll() {
         return null;
     }
 
     @Override
-    public void update(Genre genre) {
+    public void update(Subgenre subgenre) {
 
     }
 
     @Override
-    public void delete(Genre genre) {
+    public void delete(Subgenre subgenre) {
 
     }
-
 }
