@@ -1,0 +1,9 @@
+{
+	"dev":{
+		"driver":"mysql",
+		"user":"reviewbot",
+		"password":"reviewbot",
+		"host":"localhost",
+		"database":"reviewbot"
+	}
+}
