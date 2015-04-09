@@ -59,14 +59,7 @@ public class Book {
     private String free;
 
 
-    @OneToMany(fetch = FetchType.EAGER)//,
-            //cascade = CascadeType.ALL, targetEntity = GenreMap.class)
-    @JoinTable(
-            name="genre_map",
-            joinColumns=@JoinColumn(name="id"),
-            inverseJoinColumns = @JoinColumn( name="book_id")
-
-    )
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="book_id")
     private List<GenreMap> genreMap;
 
     public Integer getId() {
