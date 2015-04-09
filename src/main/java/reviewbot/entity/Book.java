@@ -25,7 +25,6 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id")
-    //private long id;
     private Integer id;
 
 		@Column(name="user_id")
@@ -69,8 +68,6 @@ public class Book {
 
     )
     private List<GenreMap> genreMap;
-
-
 
     public Integer getId() {
         return id;

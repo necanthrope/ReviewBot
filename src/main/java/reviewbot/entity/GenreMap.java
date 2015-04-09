@@ -18,7 +18,6 @@ public class GenreMap implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-
     private Integer id;
 
     private Integer book_id;
