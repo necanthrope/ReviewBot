@@ -29,4 +29,17 @@ public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
+
+    public static String getHelloWorld() {
+
+        return "Hello World";
+
+    }
+
+    public static String getHelloWorld2() {
+
+        return "Hello World 2";
+
+    }
 }
+
