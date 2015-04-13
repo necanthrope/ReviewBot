@@ -5,13 +5,24 @@
  */
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import reviewbot.Application;
+import reviewbot.dao.BookDAO;
+import reviewbot.entity.Book;
+import static com.jayway.restassured.RestAssured.*;
+import static com.jayway.restassured.matcher.RestAssuredMatchers.*;
+import static org.hamcrest.Matchers.*;
+import org.apache.http.HttpStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jtidwell on 4/10/2015.
@@ -22,10 +33,32 @@ import reviewbot.Application;
 @WebAppConfiguration
 @IntegrationTest("server.port:9001")
 public class ApplicationTest {
+
+    @Autowired
+    BookDAO bookDAO;
+
+    private Book _book = new Book();
+
+    @Before
+    public void setUp() {
+        _book.setTitle((String) Double.toString((Math.random() * 20)));
+        _book.setAuthor((String) Double.toString((Math.random() * 10)));
+        bookDAO.create(_book);
+    }
+
     @Test
     public void testPrintHelloWorld() {
 
         Assert.assertEquals(Application.getHelloWorld(), "Hello World");
 
+    }
+
+    @Test
+    public void canGetBook() {
+        Integer bookId = _book.getId();
+        when().
+                get("/books?length=1&offset=0").
+        then().
+                statusCode(HttpStatus.SC_OK);
     }
 }

@@ -48,30 +48,12 @@ public class BookDAO extends AbstractDAO<Integer, Integer, Book>{
         final Integer len = length;
         final Integer offs = offset;
 
-        //return (List<Book>) getHibernateTemplate().execute(new HibernateCallback() {
-        //    public Object doInHibernate(Session session) throws HibernateException {
+        return (List<Book>) getHibernateTemplate().execute(new HibernateCallback() {
+            public Object doInHibernate(Session session) throws HibernateException {
                 Query q = getSessionFactory().getCurrentSession().createQuery("from Book");
                 q.setFirstResult(offs);
                 q.setMaxResults(len);
                 return q.list();
-        //    }
-        //});
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Book> readRangeWithMeta(Integer length, Integer offset) {
-        final Integer len = length;
-        final Integer offs = offset;
-        return (List<Book>) getHibernateTemplate().execute(new HibernateCallback() {
-            public Object doInHibernate(Session session) throws HibernateException {
-                Criteria criteria =
-                        session.createCriteria(Book.class, "books");
-                        //.createAlias("books.genreMap","genre_map");
-                        //.add(Restrictions.eqProperty("books.id","books.genre_map.book_id"));
-
-
-                criteria.addOrder(Order.asc("title"));
-                return criteria.list();
             }
         });
     }
