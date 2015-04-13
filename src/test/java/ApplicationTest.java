@@ -31,7 +31,7 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-@IntegrationTest("server.port:9001")
+@IntegrationTest({"server.port:9001", "db.username=reviewbot_test"})
 public class ApplicationTest {
 
     @Autowired
