@@ -31,7 +31,10 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-@IntegrationTest({"server.port:9001", "db.username=reviewbot_test"})
+@IntegrationTest({
+        "server.port:9001",
+        "db.url=jdbc:mysql://localhost:3306/reviewbot_test?zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8"
+})
 public class ApplicationTest {
 
     @Autowired
