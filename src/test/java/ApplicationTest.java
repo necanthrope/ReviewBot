@@ -4,11 +4,14 @@
  * Based on a work at https://github.com/necanthrope/ReviewBot.
  */
 
+import com.jayway.restassured.RestAssured;
+import org.apache.http.HttpStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -16,13 +19,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import reviewbot.Application;
 import reviewbot.dao.BookDAO;
 import reviewbot.entity.Book;
-import static com.jayway.restassured.RestAssured.*;
-import static com.jayway.restassured.matcher.RestAssuredMatchers.*;
-import static org.hamcrest.Matchers.*;
-import org.apache.http.HttpStatus;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.jayway.restassured.RestAssured.when;
 
 /**
  * Created by jtidwell on 4/10/2015.
@@ -42,11 +40,16 @@ public class ApplicationTest {
 
     private Book _book = new Book();
 
+    @Value("${local.server.port}")   // 6
+            int port;
+
     @Before
     public void setUp() {
         _book.setTitle((String) Double.toString((Math.random() * 20)));
         _book.setAuthor((String) Double.toString((Math.random() * 10)));
         bookDAO.create(_book);
+
+        RestAssured.port = port;
     }
 
     @Test
