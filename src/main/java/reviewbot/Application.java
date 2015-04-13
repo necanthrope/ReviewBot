@@ -20,7 +20,6 @@ import org.springframework.context.annotation.Configuration;
 //The ComponentScan annotation tells spring where to look for valid component classes.
 //The app will fail without at least .controllers.
 @ComponentScan({
-        "reviewbot.hello",
         "reviewbot.controllers",
         "reviewbot.dao",
         "reviewbot.configuration"})
