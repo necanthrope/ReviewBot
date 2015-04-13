@@ -219,6 +219,7 @@ pip-log.txt
 .mr.developer.cfg
 
 #
-# Stuffs
+# node db-migrate modules
+# use npm install, do not check in
 #
 src/database/mysql/node_modules

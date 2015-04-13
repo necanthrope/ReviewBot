@@ -5,5 +5,13 @@
 		"password":"reviewbot",
 		"host":"localhost",
 		"database":"reviewbot"
+	},
+	"dev-test":{
+		"driver":"mysql",
+		"user":"reviewbot",
+		"password":"reviewbot",
+		"host":"localhost",
+		"database":"reviewbot_test",
+		"port":"3306"
 	}
 }
