@@ -16,11 +16,14 @@ import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.SpringApplicationContextLoader;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import reviewbot.Application;
+import reviewbot.configuration.DatabaseConfig;
 import reviewbot.configuration.DatabaseTestConfig;
 import reviewbot.dao.BookDAO;
 import reviewbot.entity.Book;
@@ -34,10 +37,13 @@ import static com.jayway.restassured.RestAssured.when;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringApplicationConfiguration(classes = {Application.class, DatabaseConfig.class})
 @WebAppConfiguration
+@TransactionConfiguration(defaultRollback = true)
 @IntegrationTest("server.port:9001")
-@ActiveProfiles("test")
+@PropertySource("classpath:application-test.properties")
+
+//@ActiveProfiles("test")
 //@ContextConfiguration(
 //        classes={DatabaseTestConfig.class},
 //        loader = SpringApplicationContextLoader.class
