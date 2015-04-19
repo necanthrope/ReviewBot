@@ -24,7 +24,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import reviewbot.Application;
 import reviewbot.configuration.DatabaseConfig;
-import reviewbot.configuration.DatabaseTestConfig;
 import reviewbot.dao.BookDAO;
 import reviewbot.entity.Book;
 
