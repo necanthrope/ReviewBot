@@ -12,13 +12,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.SpringApplicationContextLoader;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import reviewbot.Application;
+import reviewbot.configuration.DatabaseTestConfig;
 import reviewbot.dao.BookDAO;
 import reviewbot.entity.Book;
+
+import javax.transaction.Transactional;
 
 import static com.jayway.restassured.RestAssured.when;
 
@@ -29,10 +36,13 @@ import static com.jayway.restassured.RestAssured.when;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-@IntegrationTest({
-        "server.port:9001",
-        "db.url=jdbc:mysql://localhost:3306/reviewbot_test?zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8"
-})
+@IntegrationTest("server.port:9001")
+@ActiveProfiles("test")
+//@ContextConfiguration(
+//        classes={DatabaseTestConfig.class},
+//        loader = SpringApplicationContextLoader.class
+//)
+@Transactional
 public class ApplicationTest {
 
     @Autowired
@@ -40,7 +50,7 @@ public class ApplicationTest {
 
     private Book _book = new Book();
 
-    @Value("${local.server.port}")   // 6
+    @Value("${local.server.port}")
             int port;
 
     @Before
