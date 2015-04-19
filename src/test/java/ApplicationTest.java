@@ -40,7 +40,7 @@ import static com.jayway.restassured.RestAssured.when;
 @WebAppConfiguration
 @TransactionConfiguration(defaultRollback = true)
 @IntegrationTest("server.port:9001")
-@PropertySource("classpath:application-test.properties")
+@PropertySource("classpath:test.properties")
 
 //@ActiveProfiles("test")
 //@ContextConfiguration(
