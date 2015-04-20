@@ -6,6 +6,7 @@
 
 package reviewbot.dao;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
@@ -27,6 +28,10 @@ public abstract class AbstractDAO<I, L, T> extends HibernateDaoSupport{
     @Autowired
     public void init(SessionFactory factory) {
         setSessionFactory(factory);
+    }
+
+    protected Session getCurrentSession(){
+        return _entityManager.unwrap(Session.class);
     }
 
     public abstract void create(T args);

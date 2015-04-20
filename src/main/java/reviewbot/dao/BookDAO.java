@@ -7,8 +7,6 @@
 package reviewbot.dao;
 
 import org.hibernate.*;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
 import reviewbot.entity.Book;
@@ -24,8 +22,9 @@ import java.util.List;
 public class BookDAO extends AbstractDAO<Integer, Integer, Book>{
 
     @Override
+    @Transactional
     public void create(Book book) {
-        _entityManager.persist(book);
+        getCurrentSession().save(book);
     }
 
     @Override
@@ -74,12 +73,10 @@ public class BookDAO extends AbstractDAO<Integer, Integer, Book>{
     }
 
     @Override
+    @Transactional
     public void delete(Book book) {
-        if (_entityManager.contains(book))
-            _entityManager.remove(book);
-        else
-            _entityManager.remove(_entityManager.merge(book));
-
+        getCurrentSession().delete(book);
+        getCurrentSession().flush();
     }
 
 }

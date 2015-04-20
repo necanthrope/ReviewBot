@@ -29,16 +29,5 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    public static String getHelloWorld() {
-
-        return "Hello World";
-
-    }
-
-    public static String getHelloWorld2() {
-
-        return "Hello World 2";
-
-    }
 }
 
