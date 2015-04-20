@@ -7,10 +7,7 @@
 package reviewbot.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reviewbot.dao.BookDAO;
 import reviewbot.entity.Book;
 
@@ -27,11 +24,22 @@ public class BookController {
     private BookDAO _bookDAO;
 
     /**
+     * Creates a book object in the db, then returns that book with the ID set.
+     * @param book
+     * @return saved book
+     */
+    @RequestMapping(value="/createBook", method=RequestMethod.POST)
+    public @ResponseBody Book createBook(@RequestBody Book book) {
+        return _bookDAO.create(book);
+    }
+
+
+    /**
      * Returns all books in the database.
      * @return  A JSON list of book objects
      */
-    @RequestMapping(value="/books", method=RequestMethod.GET, produces="application/json")
-    public List<Book> getBookList(
+    @RequestMapping(value="/readBooks", method=RequestMethod.GET, produces="application/json")
+    public @ResponseBody List<Book> getBookList(
             @RequestParam(value="length", defaultValue="all") String lengthStr,
             @RequestParam(value="offset", defaultValue="all") String offsetStr
     ) {
@@ -61,7 +69,7 @@ public class BookController {
         return books;
     }
 
-    @RequestMapping(value="/book", method=RequestMethod.GET, produces="application/json")
+    @RequestMapping(value="/readBook", method=RequestMethod.GET, produces="application/json")
     public Book getBook(@RequestParam(value="id", defaultValue="0") String idStr) {
 
         Book book;
@@ -76,6 +84,19 @@ public class BookController {
 
     }
 
+    @RequestMapping(value="/updateBook", method=RequestMethod.POST)
+    public void updateBook(@RequestBody Book book) {
+        _bookDAO.update(book);
+    }
 
+    @RequestMapping(value="/deleteBook", method=RequestMethod.GET)
+    public void deleteBook(@RequestParam(value="id") String idStr) {
+
+        if(idStr == null)
+            return;
+
+        _bookDAO.delete(Integer.parseInt(idStr));
+
+    }
 
 }

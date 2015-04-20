@@ -25,8 +25,8 @@ import java.util.List;
 @Transactional
 public class ThemeDAO  extends AbstractDAO<Integer, Integer, Theme>{
     @Override
-    public void create(Theme theme) {
-        
+    public Theme create(Theme theme) {
+        return null;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ThemeDAO  extends AbstractDAO<Integer, Integer, Theme>{
     }
 
     @Override
-    public void delete(Theme theme) {
+    public void delete(Integer id) {
 
     }
 }

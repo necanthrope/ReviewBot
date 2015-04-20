@@ -24,8 +24,8 @@ import java.util.List;
 public class ReviewDAO extends AbstractDAO<Integer, Integer, Review>{
 
     @Override
-    public void create(Review review) {
-        _entityManager.persist(review);
+    public Review create(Review review) {
+        return null;
     }
 
     @Override
@@ -67,11 +67,8 @@ public class ReviewDAO extends AbstractDAO<Integer, Integer, Review>{
     }
 
     @Override
-    public void delete(Review review) {
-        if(_entityManager.contains(review))
-            _entityManager.remove(review);
-        else
-            _entityManager.remove(_entityManager.merge(review));
+    public void delete(Integer id) {
+        return;
     }
 
 }

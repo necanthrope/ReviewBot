@@ -26,8 +26,8 @@ import java.util.List;
 public class SubgenreDAO extends AbstractDAO<Integer, Integer, Subgenre>{
 
     @Override
-    public void create(Subgenre subgenre) {
-
+    public Subgenre create(Subgenre subgenre) {
+        return null;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class SubgenreDAO extends AbstractDAO<Integer, Integer, Subgenre>{
     }
 
     @Override
-    public void delete(Subgenre subgenre) {
+    public void delete(Integer id) {
 
     }
 }

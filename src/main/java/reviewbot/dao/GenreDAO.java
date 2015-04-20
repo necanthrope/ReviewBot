@@ -26,8 +26,8 @@ import java.util.List;
 public class GenreDAO extends AbstractDAO<Integer, Integer, Genre> {
 
     @Override
-    public void create(Genre genre) {
-
+    public Genre create(Genre genre) {
+        return null;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class GenreDAO extends AbstractDAO<Integer, Integer, Genre> {
     }
 
     @Override
-    public void delete(Genre genre) {
+    public void delete(Integer id) {
 
     }
 

@@ -34,7 +34,7 @@ public abstract class AbstractDAO<I, L, T> extends HibernateDaoSupport{
         return _entityManager.unwrap(Session.class);
     }
 
-    public abstract void create(T args);
+    public abstract T create(T args);
 
     public abstract T readOne(L id);
 
@@ -46,6 +46,6 @@ public abstract class AbstractDAO<I, L, T> extends HibernateDaoSupport{
 
     public abstract void update(T args);
 
-    public abstract void delete(T args);
+    public abstract void delete(I args);
 
 }

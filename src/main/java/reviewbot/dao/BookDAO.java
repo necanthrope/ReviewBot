@@ -23,21 +23,15 @@ public class BookDAO extends AbstractDAO<Integer, Integer, Book>{
 
     @Override
     @Transactional
-    public void create(Book book) {
+    public Book create(Book book) {
         getCurrentSession().save(book);
+        return book;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<Book> readAll() {
         return _entityManager.createQuery("from Book").getResultList();
-    }
-
-    public Book getByTitle(String title) {
-        return (Book) _entityManager.createQuery(
-                "from Book where title = :title")
-                .setParameter("title", title)
-                .getSingleResult();
     }
 
     @Override
@@ -59,7 +53,9 @@ public class BookDAO extends AbstractDAO<Integer, Integer, Book>{
 
     @Override
     public Book readOne(Integer id) {
-        return (Book) _entityManager.find(Book.class, id);
+        Book book;
+        book = (Book) getCurrentSession().get(Book.class, id);
+        return book;
     }
 
     @Override
@@ -69,12 +65,13 @@ public class BookDAO extends AbstractDAO<Integer, Integer, Book>{
 
     @Override
     public void update(Book book) {
-        _entityManager.merge(book);
+        getCurrentSession().merge(book);
     }
 
     @Override
     @Transactional
-    public void delete(Book book) {
+    public void delete(Integer id) {
+        Book book = readOne(id);
         getCurrentSession().delete(book);
         getCurrentSession().flush();
     }
