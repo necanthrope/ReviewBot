@@ -30,10 +30,8 @@ import javax.transaction.Transactional;
 import reviewbot.Application;
 import reviewbot.configuration.DatabaseConfig;
 import reviewbot.dao.BookDAO;
-import reviewbot.entity.Book;
-import reviewbot.entity.Genre;
-import reviewbot.entity.Subgenre;
-import reviewbot.entity.Theme;
+import reviewbot.dao.UserDAO;
+import reviewbot.entity.*;
 
 import org.json.simple.JSONObject;
 
@@ -54,10 +52,15 @@ public class ApplicationTest {
     @Autowired
     BookDAO bookDAO;
 
+    @Autowired
+    UserDAO userDAO;
+
     private Book _book;
     private Genre _genre1;
     private Subgenre _subgenre1;
     private Theme _theme1;
+
+    private User _user;
 
     private boolean needsCleaning = true;
 
@@ -73,6 +76,8 @@ public class ApplicationTest {
         _subgenre1 = TestDataGenerator.createSubgenre(_book);
         _theme1 = TestDataGenerator.createTheme(_book);
 
+        _user = userDAO.readOne(1);
+
     }
 
     @Test
@@ -86,6 +91,7 @@ public class ApplicationTest {
         bookJson.put("publisher", _book.getPublisher());
         bookJson.put("isbn", _book.getIsbn());
         bookJson.put("year", _book.getYear());
+        bookJson.put("userId", _user.getId());
 
         Integer bookId = given().
                 contentType(JSON).
@@ -115,6 +121,7 @@ public class ApplicationTest {
     public void test2CanReadBooks() {
 
         bookDAO.create(_book);
+        _book.setUser(_user);
         //System.out.println("\n\n\n\n" + get("/books?length=1&offset=0").asString() + "\n\n\n\n");
 
         when().
@@ -136,6 +143,7 @@ public class ApplicationTest {
     public void test3CanReadBook() {
 
         bookDAO.create(_book);
+        _book.setUser(_user);
         //System.out.println("\n\n\n\n" + get("/readBook?id=".concat(_book.getId().toString())).asString() + "\n\n\n\n");
 
         when().
@@ -156,6 +164,7 @@ public class ApplicationTest {
     @Test
     public void test4CanUpdateBook() {
         bookDAO.create(_book);
+        _book.setUser(_user);
         Book book2 = TestDataGenerator.createBook();
 
         JSONObject bookJson = new JSONObject();
@@ -195,6 +204,7 @@ public class ApplicationTest {
     @Test
     public void test5CanDeleteBook() {
         bookDAO.create(_book);
+        _book.setUser(_user);
 
         when().
                 get("/deleteBook?id=".concat(_book.getId().toString())).

@@ -27,8 +27,8 @@ public class Book {
     @Column(name="id")
     private Integer id;
 
-		@Column(name="user_id")
-    private Integer userId;
+    //@Column(name="user_id")
+    //private Integer userId;
 
     @NotNull
     @Size(min = 1, max=255)
@@ -59,6 +59,10 @@ public class Book {
     private String free;
 
 
+
+    @OneToOne(fetch = FetchType.EAGER, mappedBy="user_id")
+    private User user;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy="book_id")
     private List<GenreMap> genreMap;
 
@@ -71,13 +75,13 @@ public class Book {
         this.id = id;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
+    //public Integer getUserId() {
+    //    return userId;
+    //}
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
+    //public void setUserId(Integer userId) {
+    //    this.userId = userId;
+    //}
 
     public String getTitle() {
         return title;
@@ -157,6 +161,14 @@ public class Book {
 
     public void setGenreMaps(List<GenreMap> genreMaps) {
         this.genreMap = genreMaps;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
