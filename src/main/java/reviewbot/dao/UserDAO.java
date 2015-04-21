@@ -8,12 +8,17 @@ package reviewbot.dao;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
 import reviewbot.entity.Book;
 import reviewbot.entity.User;
+
+import javax.transaction.Transactional;
 
 /**
  * Created by jtidwell on 4/20/2015.
  */
+@Repository
+@Transactional
 public class UserDAO extends AbstractDAO<Integer, Integer, User>{
     @Override
     public User create(User args) {
