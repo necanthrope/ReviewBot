@@ -60,7 +60,7 @@ public class Book {
 
 
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, mappedBy="user_id")
     private User user;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy="book_id")

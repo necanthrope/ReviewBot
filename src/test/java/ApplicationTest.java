@@ -85,17 +85,13 @@ public class ApplicationTest {
 
         //System.out.println("\n\n\nBOOK:" + _book.getId() + ":" + _book.getTitle() + "\n\n\n");
 
-        JSONObject userJson = new JSONObject();
-        userJson.put("id", _user.getId());
-        userJson.put("username", _user.getUsername());
-
         JSONObject bookJson = new JSONObject();
         bookJson.put("title", _book.getTitle());
         bookJson.put("author", _book.getAuthor());
         bookJson.put("publisher", _book.getPublisher());
         bookJson.put("isbn", _book.getIsbn());
         bookJson.put("year", _book.getYear());
-        bookJson.put("user", userJson.toJSONString());
+        bookJson.put("userId", _user.getId());
 
         Integer bookId = given().
                 contentType(JSON).
