@@ -11,6 +11,7 @@ package reviewbot.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -58,10 +59,9 @@ public class Book {
     @Size(min = 1, max=5)
     private String free;
 
-
-
-    @OneToOne(fetch = FetchType.EAGER)
-    private User user;
+    @OneToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="user_id", insertable=false, updatable=false)
+    private User users;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy="book_id")
     private List<GenreMap> genreMap;
@@ -163,16 +163,26 @@ public class Book {
         this.genreMap = genreMaps;
     }
 
-    public User getUser() {
-        return user;
+    public User getUsers() {
+        return users;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUsers(User user) {
+        this.users = user;
     }
 
     @Override
     public String toString(){
         return "{ID="+id+",Title="+title+",Publisher="+publisher+"}";
     }
+
+
+
+
+
+
+
+
+
+
 }

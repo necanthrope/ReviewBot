@@ -8,6 +8,7 @@ package reviewbot.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 /**
  * Created by jtidwell on 4/20/2015.
@@ -33,7 +34,11 @@ public class User {
     @Size(min = 1, max=40)
     private String surname;
 
-    private byte admin;
+    //@OneToMany(fetch = FetchType.EAGER)
+    //private List<Book> books;
+
+    @Column(name = "admin", columnDefinition="bit")
+    private Integer admin;
 
     public Integer getId() {
         return id;
@@ -75,12 +80,20 @@ public class User {
         this.surname = surname;
     }
 
-    public byte getAdmin() {
+    public Integer getAdmin() {
         return admin;
     }
 
-    public void setAdmin(byte admin) {
+    public void setAdmin(Integer admin) {
         this.admin = admin;
     }
+
+    //public List<Book> getBooks() {
+    //    return books;
+    //}
+
+    //public void setBooks(List<Book> books) {
+    //    this.books = books;
+    //}
 
 }

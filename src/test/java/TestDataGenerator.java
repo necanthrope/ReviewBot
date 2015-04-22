@@ -21,12 +21,11 @@ public class TestDataGenerator {
         book.setPublisher(Double.toString((Math.random() * 10)));
         book.setIsbn(Double.toString(Math.floor((Math.random() * 100000000))));
         book.setYear(Double.toString(Math.floor((Math.random() * 100 ))));
-        //book.setUserId(1);
 
         return book;
     }
 
-    public static Genre createGenre(Book book) {
+    public static Genre createGenre() {
         Genre genre = new Genre();
         genre.setName(Double.toString((Math.random() * 20)));
         genre.setDescription(Double.toString((Math.random() * 100)));
@@ -34,7 +33,7 @@ public class TestDataGenerator {
         return genre;
     }
 
-    public static Subgenre createSubgenre(Book book) {
+    public static Subgenre createSubgenre() {
         Subgenre subgenre = new Subgenre();
         subgenre.setName(Double.toString((Math.random() * 20)));
         subgenre.setDescription(Double.toString((Math.random() * 100)));
@@ -42,7 +41,7 @@ public class TestDataGenerator {
         return subgenre;
     }
 
-    public static Theme createTheme(Book book) {
+    public static Theme createTheme() {
         Theme theme = new Theme();
         theme.setName(Double.toString((Math.random() * 20)));
         theme.setDescription(Double.toString((Math.random() * 100)));

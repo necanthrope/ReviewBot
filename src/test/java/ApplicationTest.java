@@ -10,6 +10,7 @@ import static com.jayway.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 import static com.jayway.restassured.http.ContentType.JSON;
 
+import configuration.TestDatabaseConfig;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +29,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import javax.transaction.Transactional;
 
 import reviewbot.Application;
-import reviewbot.configuration.DatabaseConfig;
 import reviewbot.dao.BookDAO;
 import reviewbot.dao.UserDAO;
 import reviewbot.entity.*;
@@ -40,14 +40,15 @@ import org.json.simple.JSONObject;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {Application.class, DatabaseConfig.class})
+@SpringApplicationConfiguration(classes = {Application.class, TestDatabaseConfig.class})
 @WebAppConfiguration
 @TransactionConfiguration(defaultRollback = true)
 @IntegrationTest("server.port:9001")
-@PropertySource("classpath:test.properties")
+@PropertySource("classpath:/test.properties")
 @Transactional
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ApplicationTest {
+
 
     @Autowired
     BookDAO bookDAO;
@@ -67,14 +68,15 @@ public class ApplicationTest {
     @Value("${local.server.port}")
             int port;
 
+
     @Before
     public void setUp() {
 
         RestAssured.port = port;
         _book = TestDataGenerator.createBook();
-        _genre1 = TestDataGenerator.createGenre(_book);
-        _subgenre1 = TestDataGenerator.createSubgenre(_book);
-        _theme1 = TestDataGenerator.createTheme(_book);
+        _genre1 = TestDataGenerator.createGenre();
+        _subgenre1 = TestDataGenerator.createSubgenre();
+        _theme1 = TestDataGenerator.createTheme();
 
         _user = userDAO.readOne(1);
 
@@ -84,6 +86,8 @@ public class ApplicationTest {
     public void test1CanCreateBook() {
 
         //System.out.println("\n\n\nBOOK:" + _book.getId() + ":" + _book.getTitle() + "\n\n\n");
+
+        //_user = userDAO.readOne(1);
 
         JSONObject userJson = new JSONObject();
         userJson.put("id", _user.getId());
@@ -96,6 +100,9 @@ public class ApplicationTest {
         bookJson.put("isbn", _book.getIsbn());
         bookJson.put("year", _book.getYear());
         bookJson.put("user", userJson.toJSONString());
+
+
+        System.out.println("\n\n\n\nJSON: \n" + bookJson.toJSONString() + "\n\n\n\n");
 
         Integer bookId = given().
                 contentType(JSON).
@@ -123,9 +130,8 @@ public class ApplicationTest {
 
     @Test
     public void test2CanReadBooks() {
-
+        _book.setUsers(_user);
         bookDAO.create(_book);
-        _book.setUser(_user);
         //System.out.println("\n\n\n\n" + get("/books?length=1&offset=0").asString() + "\n\n\n\n");
 
         when().
@@ -146,8 +152,8 @@ public class ApplicationTest {
     @Test
     public void test3CanReadBook() {
 
+        _book.setUsers(_user);
         bookDAO.create(_book);
-        _book.setUser(_user);
         //System.out.println("\n\n\n\n" + get("/readBook?id=".concat(_book.getId().toString())).asString() + "\n\n\n\n");
 
         when().
@@ -167,9 +173,11 @@ public class ApplicationTest {
 
     @Test
     public void test4CanUpdateBook() {
+        _book.setUsers(_user);
         bookDAO.create(_book);
-        _book.setUser(_user);
+
         Book book2 = TestDataGenerator.createBook();
+        book2.setUsers(_user);
 
         JSONObject bookJson = new JSONObject();
         bookJson.put("id", _book.getId());
@@ -207,8 +215,8 @@ public class ApplicationTest {
 
     @Test
     public void test5CanDeleteBook() {
+        _book.setUsers(_user);
         bookDAO.create(_book);
-        _book.setUser(_user);
 
         when().
                 get("/deleteBook?id=".concat(_book.getId().toString())).
@@ -222,7 +230,9 @@ public class ApplicationTest {
 
     @After
     public void cleanUp() {
-        if (needsCleaning)
+        if (needsCleaning) {
             bookDAO.delete(_book.getId());
+        }
     }
+
 }
