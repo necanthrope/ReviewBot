@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import reviewbot.dao.ReviewDAO;
+import reviewbot.repository.ReviewRepository;
 import reviewbot.entity.Review;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 public class ReviewController {
     @Autowired
-    private ReviewDAO _reviewDAO;
+    private ReviewRepository _reviewDAO;
 
     @RequestMapping(value="/reviews", method=RequestMethod.GET, produces="application/json")
     public List<Review> getReviews() {

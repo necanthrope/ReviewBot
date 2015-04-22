@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
 //The app will fail without at least .controllers.
 @ComponentScan({
         "reviewbot.controllers",
-        "reviewbot.dao",
+        "reviewbot.repository",
         "reviewbot.configuration"})
 
 public class Application {

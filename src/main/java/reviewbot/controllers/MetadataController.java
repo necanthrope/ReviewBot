@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import reviewbot.dao.GenreDAO;
-import reviewbot.dao.SubgenreDAO;
-import reviewbot.dao.ThemeDAO;
+import reviewbot.repository.GenreRepository;
+import reviewbot.repository.SubgenreRepository;
+import reviewbot.repository.ThemeRepository;
 import reviewbot.entity.Genre;
 import reviewbot.entity.Subgenre;
 import reviewbot.entity.Theme;
@@ -27,11 +27,11 @@ import java.util.List;
 @RestController
 public class MetadataController {
     @Autowired
-    private GenreDAO _genreDAO;
+    private GenreRepository _genreDAO;
     @Autowired
-    private SubgenreDAO _subgenreDAO;
+    private SubgenreRepository _subgenreDAO;
     @Autowired
-    private ThemeDAO _themeDAO;
+    private ThemeRepository _themeDAO;
 
     /**
      * Forward the request for genre metadata to the GenreDAO.

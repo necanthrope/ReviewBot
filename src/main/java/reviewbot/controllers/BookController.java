@@ -8,7 +8,7 @@ package reviewbot.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import reviewbot.dao.BookDAO;
+import reviewbot.repository.BookRepository;
 import reviewbot.entity.Book;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.List;
 public class BookController {
 
     @Autowired
-    private BookDAO _bookDAO;
+    private BookRepository _bookDAO;
 
     /**
      * Creates a book object in the db, then returns that book with the ID set.

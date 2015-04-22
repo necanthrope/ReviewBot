@@ -29,8 +29,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import javax.transaction.Transactional;
 
 import reviewbot.Application;
-import reviewbot.dao.BookDAO;
-import reviewbot.dao.UserDAO;
+import reviewbot.repository.BookRepository;
+import reviewbot.repository.UserRepository;
 import reviewbot.entity.*;
 
 import org.json.simple.JSONObject;
@@ -51,10 +51,10 @@ public class ApplicationTest {
 
 
     @Autowired
-    BookDAO bookDAO;
+    BookRepository bookDAO;
 
     @Autowired
-    UserDAO userDAO;
+    UserRepository userDAO;
 
     private Book _book;
     private Genre _genre1;
