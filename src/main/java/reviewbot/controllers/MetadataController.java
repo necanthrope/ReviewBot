@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reviewbot.dto.GenreDTO;
+import reviewbot.dto.SubgenreDTO;
+import reviewbot.dto.ThemeDTO;
 import reviewbot.repository.GenreRepository;
 import reviewbot.repository.SubgenreRepository;
 import reviewbot.repository.ThemeRepository;
@@ -27,11 +30,11 @@ import java.util.List;
 @RestController
 public class MetadataController {
     @Autowired
-    private GenreRepository _genreDAO;
+    private GenreRepository _genreRepo;
     @Autowired
-    private SubgenreRepository _subgenreDAO;
+    private SubgenreRepository _subgenreRepo;
     @Autowired
-    private ThemeRepository _themeDAO;
+    private ThemeRepository _themeRepo;
 
     /**
      * Forward the request for genre metadata to the GenreDAO.
@@ -41,12 +44,12 @@ public class MetadataController {
      */
 
     @RequestMapping(value="/genres", method= RequestMethod.GET, produces="application/json")
-    public List<Genre> getGenresByIds(
+    public List<GenreDTO> getGenresByIds(
             @RequestParam(value="ids") String idsIn) {
         if(idsIn == null)
-            return new ArrayList<>();
+            return new ArrayList<GenreDTO>();
 
-        return _genreDAO.readList(parseIds(idsIn));
+        return _genreRepo.readList(parseIds(idsIn));
     }
 
     /**
@@ -56,12 +59,12 @@ public class MetadataController {
      * @return List of subgenre objects
      */
     @RequestMapping(value="/subgenres", method= RequestMethod.GET, produces="application/json")
-    public List<Subgenre> getSubgenresByIds(
+    public List<SubgenreDTO> getSubgenresByIds(
             @RequestParam(value="ids") String idsIn) {
         if(idsIn == null)
-            return new ArrayList<>();
+            return new ArrayList<SubgenreDTO>();
 
-        return _subgenreDAO.readList(parseIds(idsIn));
+        return _subgenreRepo.readList(parseIds(idsIn));
     }
 
     /**
@@ -71,17 +74,17 @@ public class MetadataController {
      * @return List of theme objects
      */
     @RequestMapping(value="/themes", method= RequestMethod.GET, produces="application/json")
-    public List<Theme> getThemesByIds(
+    public List<ThemeDTO> getThemesByIds(
             @RequestParam(value="ids") String idsIn) {
         if(idsIn == null)
-            return new ArrayList<>();
+            return new ArrayList<ThemeDTO>();
 
-        return _themeDAO.readList(parseIds(idsIn));
+        return _themeRepo.readList(parseIds(idsIn));
     }
 
     /**
      * All the metadata tables have a similar structure. This parses a commma
-     * separated string of ID values into a Integer array, to be used by the DAO
+     * separated string of ID values into a Integer array, to be used by the repository
      * when querying the metadata tables.
      *
      * @param idsIn a comma separated string of id values

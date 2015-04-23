@@ -1,87 +1,35 @@
-/*
- * Copyright (c) 2015. ReviewBot by Jeremy Tidwell is licensed under a Creative Commons
- * Attribution-NonCommercial-ShareAlike 4.0 International License.
- * Based on a work at https://github.com/necanthrope/ReviewBot.
- */
+package reviewbot.dto;
 
-package reviewbot.entity;
+import reviewbot.entity.GenreMap;
+import reviewbot.entity.User;
 
-
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 /**
- * Created by jtidwell on 4/6/2015.
+ * Created by jtidwell on 4/22/2015.
  */
-@Entity
-@Table(name="books")
-public class Book {
+public class BookDTO {
 
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id")
     private Integer id;
-
-    //@Column(name="user_id")
-    //private Integer userId;
-
-    @NotNull
-    @Size(min = 1, max=255)
     private String title;
-
-    @NotNull
-    @Size(min = 1, max=255)
     private String author;
-
-    @Size(min = 1, max=255)
     private String publisher;
-
-    @Size(min = 1, max=13)
     private String isbn;
-
     private Byte genre;
-
     private Byte subgenre;
-
-    @Size(min = 1, max=4)
     private String year;
-
-    @Size(min = 1, max=127)
-		@Column(name="master_id")
     private String masterId;
-
-    @Size(min = 1, max=5)
     private String free;
-
-    @OneToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="user_id", unique= true, nullable=false, insertable=true, updatable=true)
-    private User users;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="book_id")
+    private UserDTO user;
     private List<GenreMap> genreMap;
 
     public Integer getId() {
         return id;
     }
 
-
     public void setId(Integer id) {
         this.id = id;
     }
-
-    //public Integer getUserId() {
-    //    return userId;
-    //}
-
-    //public void setUserId(Integer userId) {
-    //    this.userId = userId;
-    //}
 
     public String getTitle() {
         return title;
@@ -155,34 +103,20 @@ public class Book {
         this.free = free;
     }
 
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO userDTO) {
+        this.user = userDTO;
+    }
+
     public List<GenreMap> getGenreMap() {
         return genreMap;
     }
 
-    public void setGenreMaps(List<GenreMap> genreMaps) {
-        this.genreMap = genreMaps;
+    public void setGenreMap(List<GenreMap> genreMap) {
+        this.genreMap = genreMap;
     }
-
-    public User getUsers() {
-        return users;
-    }
-
-    public void setUsers(User user) {
-        this.users = user;
-    }
-
-    @Override
-    public String toString(){
-        return "{ID="+id+",Title="+title+",Publisher="+publisher+"}";
-    }
-
-
-
-
-
-
-
-
-
 
 }

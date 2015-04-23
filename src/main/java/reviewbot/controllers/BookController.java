@@ -8,6 +8,7 @@ package reviewbot.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import reviewbot.dto.BookDTO;
 import reviewbot.repository.BookRepository;
 import reviewbot.entity.Book;
 
@@ -21,16 +22,16 @@ import java.util.List;
 public class BookController {
 
     @Autowired
-    private BookRepository _bookDAO;
+    private BookRepository _bookRepo;
 
     /**
      * Creates a book object in the db, then returns that book with the ID set.
-     * @param book
+     * @param bookDTO
      * @return saved book
      */
     @RequestMapping(value="/createBook", method=RequestMethod.POST)
-    public @ResponseBody Book createBook(@RequestBody Book book) {
-        return _bookDAO.create(book);
+    public @ResponseBody BookDTO createBook(@RequestBody BookDTO bookDTO) {
+        return _bookRepo.create(bookDTO);
     }
 
 
@@ -39,16 +40,16 @@ public class BookController {
      * @return  A JSON list of book objects
      */
     @RequestMapping(value="/readBooks", method=RequestMethod.GET, produces="application/json")
-    public @ResponseBody List<Book> getBookList(
+    public @ResponseBody List<BookDTO> readBooks(
             @RequestParam(value="length", defaultValue="all") String lengthStr,
             @RequestParam(value="offset", defaultValue="all") String offsetStr
     ) {
 
-        List<Book> books = new ArrayList<Book>();
+        List<BookDTO> bookDTOs = new ArrayList<BookDTO>();
 
         if (lengthStr.equals("all") && offsetStr.equals("all")) {
             try {
-                books = _bookDAO.readAll();
+                bookDTOs = _bookRepo.readAll();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -60,33 +61,28 @@ public class BookController {
         try {
             length = Integer.parseInt(lengthStr);
             offset = Integer.parseInt(offsetStr);
-            books = _bookDAO.readRange(length, offset);
+            bookDTOs = _bookRepo.readRange(length, offset);
         }
         catch(Exception e) {
             e.printStackTrace();
         }
 
-        return books;
+        return bookDTOs;
     }
 
     @RequestMapping(value="/readBook", method=RequestMethod.GET, produces="application/json")
-    public Book getBook(@RequestParam(value="id", defaultValue="0") String idStr) {
-
-        Book book;
+    public BookDTO readBook(@RequestParam(value="id", defaultValue="0") String idStr) {
 
         if(idStr == null) {
-            book =  new Book();
-            return book;
+            return new BookDTO();
         }
-
-        book = _bookDAO.readOne(new Integer(Integer.parseInt(idStr)));
-        return book;
+        return _bookRepo.readOne(new Integer(Integer.parseInt(idStr)));
 
     }
 
     @RequestMapping(value="/updateBook", method=RequestMethod.POST)
-    public void updateBook(@RequestBody Book book) {
-        _bookDAO.update(book);
+    public void updateBook(@RequestBody BookDTO bookDTO) {
+        _bookRepo.update(bookDTO);
     }
 
     @RequestMapping(value="/deleteBook", method=RequestMethod.GET)
@@ -95,7 +91,7 @@ public class BookController {
         if(idStr == null)
             return;
 
-        _bookDAO.delete(Integer.parseInt(idStr));
+        _bookRepo.delete(Integer.parseInt(idStr));
 
     }
 

@@ -1,43 +1,14 @@
-/*
- * Copyright (c) 2015. ReviewBot by Jeremy Tidwell is licensed under a Creative Commons
- * Attribution-NonCommercial-ShareAlike 4.0 International License.
- * Based on a work at https://github.com/necanthrope/ReviewBot.
- */
-
-package reviewbot.entity;
-
-import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.util.List;
+package reviewbot.dto;
 
 /**
- * Created by jtidwell on 4/20/2015.
+ * Created by jtidwell on 4/22/2015.
  */
-@Entity
-@Table(name="users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id")
+public class UserDTO {
     private Integer id;
-
-    @Size(min = 1, max=40)
     private String username;
-
-    @Size(min = 1, max=40)
     private String password;
-
-    @Size(min = 1, max=40)
     private String forename;
-
-    @Size(min = 1, max=40)
     private String surname;
-
-    //@OneToMany(fetch = FetchType.EAGER)
-    //private List<Book> books;
-
-    @Column(name = "admin", columnDefinition="bit")
     private Integer admin;
 
     public Integer getId() {

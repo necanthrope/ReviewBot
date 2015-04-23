@@ -22,13 +22,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import javax.transaction.Transactional;
 
 import reviewbot.Application;
+import reviewbot.dto.*;
 import reviewbot.repository.BookRepository;
 import reviewbot.repository.UserRepository;
 import reviewbot.entity.*;
@@ -44,24 +44,23 @@ import org.json.simple.JSONObject;
 @WebAppConfiguration
 @TransactionConfiguration(defaultRollback = true)
 @IntegrationTest("server.port:9001")
-@PropertySource("classpath:/test.properties")
 @Transactional
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ApplicationTest {
 
 
     @Autowired
-    BookRepository bookDAO;
+    private BookRepository _bookRepository;
 
     @Autowired
-    UserRepository userDAO;
+    private UserRepository _userRepository;
 
-    private Book _book;
-    private Genre _genre1;
-    private Subgenre _subgenre1;
-    private Theme _theme1;
+    private BookDTO _bookDTO;
+    private GenreDTO _genreDTO1;
+    private SubgenreDTO _subgenreDTO1;
+    private ThemeDTO _themeDTO1;
 
-    private User _user;
+    private UserDTO _userDTO;
 
     private boolean needsCleaning = true;
 
@@ -73,36 +72,37 @@ public class ApplicationTest {
     public void setUp() {
 
         RestAssured.port = port;
-        _book = TestDataGenerator.createBook();
-        _genre1 = TestDataGenerator.createGenre();
-        _subgenre1 = TestDataGenerator.createSubgenre();
-        _theme1 = TestDataGenerator.createTheme();
+        _bookDTO = TestDataGenerator.createBook();
+        _genreDTO1 = TestDataGenerator.createGenre();
+        _subgenreDTO1 = TestDataGenerator.createSubgenre();
+        _themeDTO1 = TestDataGenerator.createTheme();
 
-        _user = userDAO.readOne(1);
+        _userDTO = _userRepository.readOne(1);
 
     }
 
     @Test
     public void test1CanCreateBook() {
 
-        //System.out.println("\n\n\nBOOK:" + _book.getId() + ":" + _book.getTitle() + "\n\n\n");
+        //System.out.println("\n\n\nBOOK:" + _bookDTO.getId() + ":" + _bookDTO.getTitle() + "\n\n\n");
 
-        //_user = userDAO.readOne(1);
+        //_userDTO = _userRepository.readOne(1);
 
         JSONObject userJson = new JSONObject();
-        userJson.put("id", _user.getId());
-        userJson.put("username", _user.getUsername());
+        userJson.put("id", _userDTO.getId());
+        userJson.put("username", _userDTO.getUsername());
 
         JSONObject bookJson = new JSONObject();
-        bookJson.put("title", _book.getTitle());
-        bookJson.put("author", _book.getAuthor());
-        bookJson.put("publisher", _book.getPublisher());
-        bookJson.put("isbn", _book.getIsbn());
-        bookJson.put("year", _book.getYear());
-        bookJson.put("user", userJson.toJSONString());
+        bookJson.put("title", _bookDTO.getTitle());
+        bookJson.put("author", _bookDTO.getAuthor());
+        bookJson.put("publisher", _bookDTO.getPublisher());
+        bookJson.put("isbn", _bookDTO.getIsbn());
+        bookJson.put("year", _bookDTO.getYear());
+        bookJson.put("user", userJson);
 
 
-        System.out.println("\n\n\n\nJSON: \n" + bookJson.toJSONString() + "\n\n\n\n");
+        //System.out.println("\n\n\n\nJSON: \n" + bookJson.toJSONString());
+        //System.out.println("\nJSON: \n" + userJson.toJSONString() + "\n\n\n\n");
 
         Integer bookId = given().
                 contentType(JSON).
@@ -112,17 +112,17 @@ public class ApplicationTest {
         then().
                 contentType(JSON).
                 statusCode(HttpStatus.SC_OK).
-                body("title", equalTo(_book.getTitle())).
-                body("author", equalTo(_book.getAuthor())).
-                body("publisher", equalTo(_book.getPublisher())).
-                body("isbn", equalTo(_book.getIsbn())).
-                body("year", equalTo(_book.getYear())).
+                body("title", equalTo(_bookDTO.getTitle())).
+                body("author", equalTo(_bookDTO.getAuthor())).
+                body("publisher", equalTo(_bookDTO.getPublisher())).
+                body("isbn", equalTo(_bookDTO.getIsbn())).
+                body("year", equalTo(_bookDTO.getYear())).
         log()
                 .ifError().
         extract()
                 .path("id");
 
-        _book.setId(bookId);
+        _bookDTO.setId(bookId);
 
         //System.out.println("\n\n\n **" + bookId + "**\n\n\n");
 
@@ -130,8 +130,9 @@ public class ApplicationTest {
 
     @Test
     public void test2CanReadBooks() {
-        _book.setUsers(_user);
-        bookDAO.create(_book);
+        _bookDTO.setUser(_userDTO);
+        _bookDTO = _bookRepository.create(_bookDTO);
+
         //System.out.println("\n\n\n\n" + get("/books?length=1&offset=0").asString() + "\n\n\n\n");
 
         when().
@@ -139,11 +140,11 @@ public class ApplicationTest {
         then().
                 contentType(JSON).
                 statusCode(HttpStatus.SC_OK).
-                body("[0].title", equalTo(_book.getTitle())).
-                body("[0].author", equalTo(_book.getAuthor())).
-                body("[0].publisher", equalTo(_book.getPublisher())).
-                body("[0].isbn", equalTo(_book.getIsbn())).
-                body("[0].year", equalTo(_book.getYear())).
+                body("[0].title", equalTo(_bookDTO.getTitle())).
+                body("[0].author", equalTo(_bookDTO.getAuthor())).
+                body("[0].publisher", equalTo(_bookDTO.getPublisher())).
+                body("[0].isbn", equalTo(_bookDTO.getIsbn())).
+                body("[0].year", equalTo(_bookDTO.getYear())).
         log()
                 .ifError();
 
@@ -152,20 +153,20 @@ public class ApplicationTest {
     @Test
     public void test3CanReadBook() {
 
-        _book.setUsers(_user);
-        bookDAO.create(_book);
-        //System.out.println("\n\n\n\n" + get("/readBook?id=".concat(_book.getId().toString())).asString() + "\n\n\n\n");
+        _bookDTO.setUser(_userDTO);
+        _bookDTO = _bookRepository.create(_bookDTO);
+        //System.out.println("\n\n\n\n" + get("/readBook?id=".concat(_bookDTO.getId().toString())).asString() + "\n\n\n\n");
 
         when().
-                get("/readBook?id=".concat(_book.getId().toString())).
+                get("/readBook?id=".concat(_bookDTO.getId().toString())).
         then().
                 contentType(JSON).
                 statusCode(HttpStatus.SC_OK).
-                body("title", equalTo(_book.getTitle())).
-                body("author", equalTo(_book.getAuthor())).
-                body("publisher", equalTo(_book.getPublisher())).
-                body("isbn", equalTo(_book.getIsbn())).
-                body("year", equalTo(_book.getYear())).
+                body("title", equalTo(_bookDTO.getTitle())).
+                body("author", equalTo(_bookDTO.getAuthor())).
+                body("publisher", equalTo(_bookDTO.getPublisher())).
+                body("isbn", equalTo(_bookDTO.getIsbn())).
+                body("year", equalTo(_bookDTO.getYear())).
         log()
                 .ifError();
 
@@ -173,14 +174,14 @@ public class ApplicationTest {
 
     @Test
     public void test4CanUpdateBook() {
-        _book.setUsers(_user);
-        bookDAO.create(_book);
+        _bookDTO.setUser(_userDTO);
+        _bookDTO = _bookRepository.create(_bookDTO);
 
-        Book book2 = TestDataGenerator.createBook();
-        book2.setUsers(_user);
+        BookDTO book2 = TestDataGenerator.createBook();
+        book2.setUser(_userDTO);
 
         JSONObject bookJson = new JSONObject();
-        bookJson.put("id", _book.getId());
+        bookJson.put("id", _bookDTO.getId());
 
         bookJson.put("title", book2.getTitle());
         bookJson.put("author", book2.getAuthor());
@@ -200,7 +201,7 @@ public class ApplicationTest {
 
 
         when().
-                get("/readBook?id=".concat(_book.getId().toString())).
+                get("/readBook?id=".concat(_bookDTO.getId().toString())).
         then().
                 contentType(JSON).
                 statusCode(HttpStatus.SC_OK).
@@ -215,11 +216,11 @@ public class ApplicationTest {
 
     @Test
     public void test5CanDeleteBook() {
-        _book.setUsers(_user);
-        bookDAO.create(_book);
+        _bookDTO.setUser(_userDTO);
+        _bookDTO = _bookRepository.create(_bookDTO);
 
         when().
-                get("/deleteBook?id=".concat(_book.getId().toString())).
+                get("/deleteBook?id=".concat(_bookDTO.getId().toString())).
         then().
                 statusCode(HttpStatus.SC_OK).
         log()
@@ -231,7 +232,7 @@ public class ApplicationTest {
     @After
     public void cleanUp() {
         if (needsCleaning) {
-            bookDAO.delete(_book.getId());
+            _bookRepository.delete(_bookDTO.getId());
         }
     }
 

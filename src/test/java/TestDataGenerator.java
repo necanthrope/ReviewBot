@@ -4,6 +4,10 @@
  * Based on a work at https://github.com/necanthrope/ReviewBot.
  */
 
+import reviewbot.dto.BookDTO;
+import reviewbot.dto.GenreDTO;
+import reviewbot.dto.SubgenreDTO;
+import reviewbot.dto.ThemeDTO;
 import reviewbot.entity.Book;
 import reviewbot.entity.Genre;
 import reviewbot.entity.Subgenre;
@@ -14,38 +18,38 @@ import reviewbot.entity.Theme;
  */
 public class TestDataGenerator {
 
-    public static Book createBook() {
-        Book book = new Book();
-        book.setTitle(Double.toString((Math.random() * 20)));
-        book.setAuthor(Double.toString((Math.random() * 10)));
-        book.setPublisher(Double.toString((Math.random() * 10)));
-        book.setIsbn(Double.toString(Math.floor((Math.random() * 100000000))));
-        book.setYear(Double.toString(Math.floor((Math.random() * 100 ))));
+    public static BookDTO createBook() {
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle(Double.toString((Math.random() * 20)));
+        bookDTO.setAuthor(Double.toString((Math.random() * 10)));
+        bookDTO.setPublisher(Double.toString((Math.random() * 10)));
+        bookDTO.setIsbn(Double.toString(Math.floor((Math.random() * 100000000))));
+        bookDTO.setYear(Double.toString(Math.floor((Math.random() * 100 ))));
 
-        return book;
+        return bookDTO;
     }
 
-    public static Genre createGenre() {
-        Genre genre = new Genre();
-        genre.setName(Double.toString((Math.random() * 20)));
-        genre.setDescription(Double.toString((Math.random() * 100)));
+    public static GenreDTO createGenre() {
+        GenreDTO genreDTO = new GenreDTO();
+        genreDTO.setName(Double.toString((Math.random() * 20)));
+        genreDTO.setDescription(Double.toString((Math.random() * 100)));
 
-        return genre;
+        return genreDTO;
     }
 
-    public static Subgenre createSubgenre() {
-        Subgenre subgenre = new Subgenre();
-        subgenre.setName(Double.toString((Math.random() * 20)));
-        subgenre.setDescription(Double.toString((Math.random() * 100)));
+    public static SubgenreDTO createSubgenre() {
+        SubgenreDTO subgenreDTO = new SubgenreDTO();
+        subgenreDTO.setName(Double.toString((Math.random() * 20)));
+        subgenreDTO.setDescription(Double.toString((Math.random() * 100)));
 
-        return subgenre;
+        return subgenreDTO;
     }
 
-    public static Theme createTheme() {
-        Theme theme = new Theme();
-        theme.setName(Double.toString((Math.random() * 20)));
-        theme.setDescription(Double.toString((Math.random() * 100)));
+    public static ThemeDTO createTheme() {
+        ThemeDTO themeDTO = new ThemeDTO();
+        themeDTO.setName(Double.toString((Math.random() * 20)));
+        themeDTO.setDescription(Double.toString((Math.random() * 100)));
 
-        return theme;
+        return themeDTO;
     }
 }

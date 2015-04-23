@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by jtidwell on 4/7/2015.
  */
-public abstract class AbstractRepository<I, L, T> extends HibernateDaoSupport{
+public abstract class AbstractRepository<I, L, E, T> extends HibernateDaoSupport{
 
     // An EntityManager will be automatically injected from entityManagerFactory
     // setup on DatabaseConfig class.
@@ -48,4 +48,7 @@ public abstract class AbstractRepository<I, L, T> extends HibernateDaoSupport{
 
     public abstract void delete(I args);
 
+    protected abstract E wrap(T args);
+
+    protected abstract T unwrap(E args);
 }

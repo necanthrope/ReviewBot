@@ -13,9 +13,11 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
+import reviewbot.dto.SubgenreDTO;
 import reviewbot.entity.Subgenre;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,23 +25,23 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class SubgenreRepository extends AbstractRepository<Integer, Integer, Subgenre> {
+public class SubgenreRepository extends AbstractRepository<Integer, Integer, Subgenre, SubgenreDTO> {
 
     @Override
-    public Subgenre create(Subgenre subgenre) {
+    public SubgenreDTO create(SubgenreDTO subgenreDTO) {
         return null;
     }
 
     @Override
-    public Subgenre readOne(Integer id) {
+    public SubgenreDTO readOne(Integer id) {
         return null;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Subgenre> readList(Integer[] idsIn) {
+    public List<SubgenreDTO> readList(Integer[] idsIn) {
         final Integer[] ids = idsIn;
-        return (List<Subgenre>) getHibernateTemplate().execute(new HibernateCallback() {
+        List<Subgenre> subgenres = (List<Subgenre>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
                 Criteria criteria = session.createCriteria(Subgenre.class);
                 criteria.add(Restrictions.in("subgenre", ids));
@@ -47,25 +49,40 @@ public class SubgenreRepository extends AbstractRepository<Integer, Integer, Sub
                 return criteria.list();
             }
         });
+        List<SubgenreDTO> subgenreDTOs = new ArrayList<SubgenreDTO>();
+        for (Subgenre subgenre : subgenres) {
+            subgenreDTOs.add(unwrap(subgenre));
+        }
+        return subgenreDTOs;
     }
 
     @Override
-    public List<Subgenre> readRange(Integer offset, Integer length) {
+    public List<SubgenreDTO> readRange(Integer offset, Integer length) {
         return null;
     }
 
     @Override
-    public List<Subgenre> readAll() {
+    public List<SubgenreDTO> readAll() {
         return null;
     }
 
     @Override
-    public void update(Subgenre subgenre) {
+    public void update(SubgenreDTO subgenre) {
 
     }
 
     @Override
     public void delete(Integer id) {
 
+    }
+
+    @Override
+    protected Subgenre wrap(SubgenreDTO subgenreDTO) {
+        return null;
+    }
+
+    @Override
+    protected SubgenreDTO unwrap(Subgenre subgenre) {
+        return null;
     }
 }

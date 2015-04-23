@@ -7,11 +7,15 @@
 package reviewbot.repository;
 
 import org.hibernate.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
+import reviewbot.dto.BookDTO;
 import reviewbot.entity.Book;
+import reviewbot.entity.User;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,29 +23,38 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class BookRepository extends AbstractRepository<Integer, Integer, Book> {
+public class BookRepository extends AbstractRepository<Integer, Integer, Book, BookDTO> {
+
+    @Autowired
+    UserRepository _userRepository;
 
     @Override
     @Transactional
-    public Book create(Book book) {
+    public BookDTO create(BookDTO bookDTO) {
+        Book book = wrap(bookDTO);
         getCurrentSession().save(book);
-        return book;
+        return unwrap(book);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Book> readAll() {
-        return _entityManager.createQuery("from Book").getResultList();
+    public List<BookDTO> readAll() {
+        List<Book> books = _entityManager.createQuery("from Book").getResultList();
+        List<BookDTO> bookDTOs = new ArrayList<BookDTO>();
+        for (Book book : books) {
+            bookDTOs.add(unwrap(book));
+        }
+        return bookDTOs;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Book> readRange(Integer length, Integer offset) {
+    public List<BookDTO> readRange(Integer length, Integer offset) {
 
         final Integer len = length;
         final Integer offs = offset;
 
-        return (List<Book>) getHibernateTemplate().execute(new HibernateCallback() {
+        List<Book> books = (List<Book>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
                 Query q = getSessionFactory().getCurrentSession().createQuery("from Book");
                 q.setFirstResult(offs);
@@ -49,31 +62,83 @@ public class BookRepository extends AbstractRepository<Integer, Integer, Book> {
                 return q.list();
             }
         });
+
+        List<BookDTO> bookDTOs = new ArrayList<BookDTO>();
+        for (Book book : books) {
+            bookDTOs.add(unwrap(book));
+        }
+        return bookDTOs;
+
     }
 
     @Override
-    public Book readOne(Integer id) {
-        Book book;
-        book = (Book) getCurrentSession().get(Book.class, id);
-        return book;
+    public BookDTO readOne(Integer id) {
+        return unwrap((Book) getCurrentSession().get(Book.class, id));
     }
 
     @Override
-    public List<Book> readList(Integer[] ids) {
+    public List<BookDTO> readList(Integer[] ids) {
         return null;
     }
 
     @Override
-    public void update(Book book) {
+    public void update(BookDTO bookDTO) {
+        Book book = (Book) getCurrentSession().get(Book.class, bookDTO.getId());
+
+        book.setTitle(bookDTO.getTitle());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setPublisher(bookDTO.getPublisher());
+        book.setIsbn(bookDTO.getIsbn());
+        book.setYear(bookDTO.getYear());
+        book.setMasterId(bookDTO.getMasterId());
+        book.setFree(bookDTO.getFree());
+
         getCurrentSession().merge(book);
     }
 
     @Override
     @Transactional
     public void delete(Integer id) {
-        Book book = readOne(id);
-        getCurrentSession().delete(book);
-        getCurrentSession().flush();
+        Book book = (Book) getCurrentSession().get(Book.class, id);
+        if (book != null) {
+            getCurrentSession().delete(book);
+            getCurrentSession().flush();
+        }
+    }
+
+    @Override
+    protected Book wrap(BookDTO bookDTO) {
+        Book book = new Book();
+        User user = new User();
+
+        book.setTitle(bookDTO.getTitle());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setPublisher(bookDTO.getPublisher());
+        book.setIsbn(bookDTO.getIsbn());
+        book.setYear(bookDTO.getYear());
+        book.setMasterId(bookDTO.getMasterId());
+        book.setFree(bookDTO.getFree());
+        book.setUsers(_userRepository.wrap(
+                _userRepository.readOne(bookDTO.getUser().getId())));
+
+        return book;
+    }
+
+    @Override
+    protected BookDTO unwrap(Book book) {
+        BookDTO bookDTO = new BookDTO();
+
+        bookDTO.setId(book.getId());
+        bookDTO.setTitle(book.getTitle());
+        bookDTO.setAuthor(book.getAuthor());
+        bookDTO.setPublisher(book.getPublisher());
+        bookDTO.setIsbn(book.getIsbn());
+        bookDTO.setYear(book.getYear());
+        bookDTO.setMasterId(book.getMasterId());
+        bookDTO.setFree(book.getFree());
+        bookDTO.setUser(_userRepository.unwrap(book.getUsers()));
+
+        return bookDTO;
     }
 
 }

@@ -24,7 +24,7 @@ CREATE TABLE `books` (
   `publisher` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `isbn` varchar(13) COLLATE utf8_unicode_ci DEFAULT NULL,
   `genre` tinyint(4) DEFAULT NULL,
-  `subgenre` tinyint(4) DEFAULT NULL,
+  `id` tinyint(4) DEFAULT NULL,
   `year` varchar(4) COLLATE utf8_unicode_ci DEFAULT NULL,
   `master_id` varchar(127) COLLATE utf8_unicode_ci DEFAULT NULL,
   `free` varchar(5) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -172,10 +172,10 @@ CREATE TABLE `sites` (
 --
 
 CREATE TABLE `subgenres` (
-  `subgenre` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(30) DEFAULT NULL,
   `description` text,
-  PRIMARY KEY (`subgenre`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=42 DEFAULT CHARSET=latin1;
 
 --
@@ -183,10 +183,10 @@ CREATE TABLE `subgenres` (
 --
 
 CREATE TABLE `themes` (
-  `theme` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(30) DEFAULT NULL,
   `description` text,
-  PRIMARY KEY (`theme`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=297 DEFAULT CHARSET=latin1;
 
 --

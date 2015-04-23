@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reviewbot.dto.ReviewDTO;
 import reviewbot.repository.ReviewRepository;
 import reviewbot.entity.Review;
 
@@ -23,36 +24,30 @@ import java.util.List;
 @RestController
 public class ReviewController {
     @Autowired
-    private ReviewRepository _reviewDAO;
+    private ReviewRepository _reviewRepo;
 
-    @RequestMapping(value="/reviews", method=RequestMethod.GET, produces="application/json")
-    public List<Review> getReviews() {
+    @RequestMapping(value="/readAllReviews", method=RequestMethod.GET, produces="application/json")
+    public List<ReviewDTO> readReviews() {
 
-        List<Review> reviews = new ArrayList<Review>();
+        List<ReviewDTO> reviewDTOs = new ArrayList<ReviewDTO>();
 
         try {
-            reviews = _reviewDAO.readAll();
+            reviewDTOs = _reviewRepo.readAll();
         }
         catch(Exception e) {
             e.printStackTrace();
         }
 
-        return reviews;
+        return reviewDTOs;
     }
 
-    @RequestMapping(value="/review", method=RequestMethod.GET, produces="application/json")
-    public Review getReviewById(
+    @RequestMapping(value="/readReview", method=RequestMethod.GET, produces="application/json")
+    public ReviewDTO readReview(
             @RequestParam(value="id") String idStr) {
-
-        Review review;
-
         if(idStr == null) {
-            review =  new Review();
-            return review;
+            return new ReviewDTO();
         }
-
-        review = _reviewDAO.readOne(new Integer(Integer.parseInt(idStr)));
-        return review;
+        return _reviewRepo.readOne(new Integer(Integer.parseInt(idStr)));
 
     }
 }
