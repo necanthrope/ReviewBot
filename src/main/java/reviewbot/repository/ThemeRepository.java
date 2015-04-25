@@ -14,7 +14,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
 import reviewbot.dto.ThemeDTO;
-import reviewbot.entity.ThemeEntity;
+import reviewbot.entity.Theme;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class ThemeRepository extends AbstractRepository<Integer, Integer, ThemeEntity, ThemeDTO> {
+public class ThemeRepository extends AbstractRepository<Integer, Integer, Theme, ThemeDTO> {
     @Override
     public ThemeDTO create(ThemeDTO themeDTO) {
         return null;
@@ -40,9 +40,9 @@ public class ThemeRepository extends AbstractRepository<Integer, Integer, ThemeE
     @Override
     public List<ThemeDTO> readList(Integer[] idsIn) {
         final Integer[] ids = idsIn;
-        List<ThemeEntity> themeEntities =  (List<ThemeEntity>) getHibernateTemplate().execute(new HibernateCallback() {
+        List<Theme> themeEntities =  (List<Theme>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
-                Criteria criteria = session.createCriteria(ThemeEntity.class);
+                Criteria criteria = session.createCriteria(Theme.class);
                 criteria.add(Restrictions.in("theme", ids));
                 criteria.addOrder(Order.asc("name"));
                 return criteria.list();
@@ -50,8 +50,8 @@ public class ThemeRepository extends AbstractRepository<Integer, Integer, ThemeE
         });
 
         List<ThemeDTO> themeDTOs = new ArrayList<ThemeDTO>();
-        for (ThemeEntity themeEntity : themeEntities) {
-            themeDTOs.add(unwrap(themeEntity));
+        for (Theme theme : themeEntities) {
+            themeDTOs.add(unwrap(theme));
         }
         return themeDTOs;
     }
@@ -77,22 +77,22 @@ public class ThemeRepository extends AbstractRepository<Integer, Integer, ThemeE
     }
 
     @Override
-    protected ThemeEntity wrap(ThemeDTO themeDTO) {
-        ThemeEntity themeEntity = new ThemeEntity();
+    protected Theme wrap(ThemeDTO themeDTO) {
+        Theme theme = new Theme();
 
-        themeEntity.setName(themeDTO.getName());
-        themeEntity.setDescription(themeDTO.getDescription());
+        theme.setName(themeDTO.getName());
+        theme.setDescription(themeDTO.getDescription());
 
-        return themeEntity;
+        return theme;
     }
 
     @Override
-    protected ThemeDTO unwrap(ThemeEntity themeEntity) {
+    protected ThemeDTO unwrap(Theme theme) {
         ThemeDTO themeDTO = new ThemeDTO();
 
-        themeDTO.setId(themeEntity.getTheme());
-        themeDTO.setName(themeEntity.getName());
-        themeDTO.setDescription(themeEntity.getDescription());
+        themeDTO.setId(theme.getTheme());
+        themeDTO.setName(theme.getName());
+        themeDTO.setDescription(theme.getDescription());
 
         return themeDTO;
     }

@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name="genre_map")
-public class GenreMapEntity implements Serializable{
+public class GenreMap implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,11 +42,11 @@ public class GenreMapEntity implements Serializable{
     private Integer awardId;
 
     @ManyToOne(cascade=CascadeType.ALL)
-    public BookEntity bookEntity;
+    public Book book;
 
     @OneToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="genre_id", unique=true, nullable=false, insertable=true, updatable=true)
-    private GenreEntity genreEntity;
+    private Genre genre;
 
     public Integer getAwardId() {
         return awardId;
@@ -114,20 +114,20 @@ public class GenreMapEntity implements Serializable{
         this.formatId = formatId;
     }
 
-    public GenreEntity getGenreEntity() {
-        return genreEntity;
+    public Genre getGenre() {
+        return genre;
     }
 
-    public void setGenreEntity(GenreEntity genreEntity) {
-        this.genreEntity = genreEntity;
+    public void setGenre(Genre genre) {
+        this.genre = genre;
     }
 
-    public BookEntity getBookEntity() {
-        return bookEntity;
+    public Book getBook() {
+        return book;
     }
 
-    public void setBookEntity(BookEntity bookEntity) {
-        this.bookEntity = bookEntity;
+    public void setBook(Book book) {
+        this.book = book;
     }
 
 

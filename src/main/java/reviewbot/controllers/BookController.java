@@ -24,9 +24,9 @@ public class BookController {
     private BookRepository _bookRepo;
 
     /**
-     * Creates a bookEntity object in the db, then returns that bookEntity with the ID set.
+     * Creates a book object in the db, then returns that book with the ID set.
      * @param bookDTO
-     * @return saved bookEntity
+     * @return saved book
      */
     @RequestMapping(value="/createBook", method=RequestMethod.POST)
     public @ResponseBody BookDTO createBook(@RequestBody BookDTO bookDTO) {
@@ -36,7 +36,7 @@ public class BookController {
 
     /**
      * Returns all books in the database.
-     * @return  A JSON list of bookEntity objects
+     * @return  A JSON list of book objects
      */
     @RequestMapping(value="/readBooks", method=RequestMethod.GET, produces="application/json")
     public @ResponseBody List<BookDTO> readBooks(

@@ -6,12 +6,12 @@ import javax.persistence.*;
  * Created by jtidwell on 4/24/2015.
  */
 @Entity
-@Table(name = "formats")
-public class FormatsEntity {
+@Table(name = "misc")
+public class Misc {
 
     @Id
-    @Column(name = "format")
-    private int format;
+    @Column(name = "misc")
+    private int misc;
 
     @Basic
     @Column(name = "name")
@@ -21,12 +21,12 @@ public class FormatsEntity {
     @Column(name = "description", columnDefinition="text")
     private String description;
 
-    public int getFormat() {
-        return format;
+    public int getMisc() {
+        return misc;
     }
 
-    public void setFormat(int format) {
-        this.format = format;
+    public void setMisc(int misc) {
+        this.misc = misc;
     }
 
     public String getName() {
@@ -50,9 +50,9 @@ public class FormatsEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        FormatsEntity that = (FormatsEntity) o;
+        Misc that = (Misc) o;
 
-        if (format != that.format) return false;
+        if (misc != that.misc) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
 
@@ -61,7 +61,7 @@ public class FormatsEntity {
 
     @Override
     public int hashCode() {
-        int result = format;
+        int result = misc;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;

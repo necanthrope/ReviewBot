@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="books")
-public class BookEntity {
+public class Book {
 
 
     @Id
@@ -56,10 +56,10 @@ public class BookEntity {
 
     @OneToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="user_id", unique=true, nullable=false, insertable=true, updatable=true)
-    private UserEntity users;
+    private User users;
 
-    @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="bookEntity")
-    private List<GenreMapEntity> genreMapEntity;
+    @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="book")
+    private List<GenreMap> genreMap;
 
     public Integer getId() {
         return id;
@@ -142,20 +142,20 @@ public class BookEntity {
         this.free = free;
     }
 
-    public List<GenreMapEntity> getGenreMapEntity() {
-        return genreMapEntity;
+    public List<GenreMap> getGenreMap() {
+        return genreMap;
     }
 
-    public void setGenreMaps(List<GenreMapEntity> genreMapEntities) {
-        this.genreMapEntity = genreMapEntities;
+    public void setGenreMaps(List<GenreMap> genreMapEntities) {
+        this.genreMap = genreMapEntities;
     }
 
-    public UserEntity getUsers() {
+    public User getUsers() {
         return users;
     }
 
-    public void setUsers(UserEntity userEntity) {
-        this.users = userEntity;
+    public void setUsers(User user) {
+        this.users = user;
     }
 
     @Override

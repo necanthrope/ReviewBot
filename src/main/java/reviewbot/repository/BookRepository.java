@@ -12,8 +12,8 @@ import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
 import reviewbot.dto.BookDTO;
 import reviewbot.dto.GenreDTO;
-import reviewbot.entity.BookEntity;
-import reviewbot.entity.GenreMapEntity;
+import reviewbot.entity.Book;
+import reviewbot.entity.GenreMap;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class BookRepository extends AbstractRepository<Integer, Integer, BookEntity, BookDTO> {
+public class BookRepository extends AbstractRepository<Integer, Integer, Book, BookDTO> {
 
     @Autowired
     UserRepository _userRepository;
@@ -35,27 +35,27 @@ public class BookRepository extends AbstractRepository<Integer, Integer, BookEnt
     @Override
     @Transactional
     public BookDTO create(BookDTO bookDTO) {
-        BookEntity bookEntity = wrap(bookDTO);
+        Book book = wrap(bookDTO);
 
-        List<GenreMapEntity> genreMapEntities = new ArrayList<GenreMapEntity>();
+        List<GenreMap> genreMapEntities = new ArrayList<GenreMap>();
         if (bookDTO.getGenres() != null) {
             for (GenreDTO genreDTO : bookDTO.getGenres()) {
-                genreMapEntities.add(wrapMapping(bookEntity, genreDTO));
+                genreMapEntities.add(wrapMapping(book, genreDTO));
             }
         }
 
-        bookEntity.setGenreMaps(genreMapEntities);
-        getCurrentSession().save(bookEntity);
-        return unwrap(bookEntity);
+        book.setGenreMaps(genreMapEntities);
+        getCurrentSession().save(book);
+        return unwrap(book);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<BookDTO> readAll() {
-        List<BookEntity> bookEntities = _entityManager.createQuery("from Book").getResultList();
+        List<Book> bookEntities = _entityManager.createQuery("from Book").getResultList();
         List<BookDTO> bookDTOs = new ArrayList<BookDTO>();
-        for (BookEntity bookEntity : bookEntities) {
-            bookDTOs.add(unwrap(bookEntity));
+        for (Book book : bookEntities) {
+            bookDTOs.add(unwrap(book));
         }
         return bookDTOs;
     }
@@ -67,7 +67,7 @@ public class BookRepository extends AbstractRepository<Integer, Integer, BookEnt
         final Integer len = length;
         final Integer offs = offset;
 
-        List<BookEntity> bookEntities = (List<BookEntity>) getHibernateTemplate().execute(new HibernateCallback() {
+        List<Book> bookEntities = (List<Book>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
                 Query q = getSessionFactory().getCurrentSession().createQuery("from Book");
                 q.setFirstResult(offs);
@@ -77,8 +77,8 @@ public class BookRepository extends AbstractRepository<Integer, Integer, BookEnt
         });
 
         List<BookDTO> bookDTOs = new ArrayList<BookDTO>();
-        for (BookEntity bookEntity : bookEntities) {
-            bookDTOs.add(unwrap(bookEntity));
+        for (Book book : bookEntities) {
+            bookDTOs.add(unwrap(book));
         }
         return bookDTOs;
 
@@ -86,7 +86,7 @@ public class BookRepository extends AbstractRepository<Integer, Integer, BookEnt
 
     @Override
     public BookDTO readOne(Integer id) {
-        return unwrap((BookEntity) getCurrentSession().get(BookEntity.class, id));
+        return unwrap((Book) getCurrentSession().get(Book.class, id));
     }
 
     @Override
@@ -96,65 +96,65 @@ public class BookRepository extends AbstractRepository<Integer, Integer, BookEnt
 
     @Override
     public void update(BookDTO bookDTO) {
-        BookEntity bookEntity = (BookEntity) getCurrentSession().get(BookEntity.class, bookDTO.getId());
+        Book book = (Book) getCurrentSession().get(Book.class, bookDTO.getId());
 
-        bookEntity.setTitle(bookDTO.getTitle());
-        bookEntity.setAuthor(bookDTO.getAuthor());
-        bookEntity.setPublisher(bookDTO.getPublisher());
-        bookEntity.setIsbn(bookDTO.getIsbn());
-        bookEntity.setYear(bookDTO.getYear());
-        bookEntity.setMasterId(bookDTO.getMasterId());
-        bookEntity.setFree(bookDTO.getFree());
+        book.setTitle(bookDTO.getTitle());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setPublisher(bookDTO.getPublisher());
+        book.setIsbn(bookDTO.getIsbn());
+        book.setYear(bookDTO.getYear());
+        book.setMasterId(bookDTO.getMasterId());
+        book.setFree(bookDTO.getFree());
 
-        getCurrentSession().merge(bookEntity);
+        getCurrentSession().merge(book);
     }
 
     @Override
     @Transactional
     public void delete(Integer id) {
-        BookEntity bookEntity = (BookEntity) getCurrentSession().get(BookEntity.class, id);
-        if (bookEntity != null) {
-            getCurrentSession().delete(bookEntity);
+        Book book = (Book) getCurrentSession().get(Book.class, id);
+        if (book != null) {
+            getCurrentSession().delete(book);
             getCurrentSession().flush();
         }
     }
 
     @Override
-    protected BookEntity wrap(BookDTO bookDTO) {
-        BookEntity bookEntity = new BookEntity();
+    protected Book wrap(BookDTO bookDTO) {
+        Book book = new Book();
 
-        bookEntity.setTitle(bookDTO.getTitle());
-        bookEntity.setAuthor(bookDTO.getAuthor());
-        bookEntity.setPublisher(bookDTO.getPublisher());
-        bookEntity.setIsbn(bookDTO.getIsbn());
-        bookEntity.setYear(bookDTO.getYear());
-        bookEntity.setMasterId(bookDTO.getMasterId());
-        bookEntity.setFree(bookDTO.getFree());
-        bookEntity.setUsers(_userRepository.wrap(
+        book.setTitle(bookDTO.getTitle());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setPublisher(bookDTO.getPublisher());
+        book.setIsbn(bookDTO.getIsbn());
+        book.setYear(bookDTO.getYear());
+        book.setMasterId(bookDTO.getMasterId());
+        book.setFree(bookDTO.getFree());
+        book.setUsers(_userRepository.wrap(
                 _userRepository.readOne(bookDTO.getUser().getId())));
 
-        return bookEntity;
+        return book;
     }
 
     @Override
-    protected BookDTO unwrap(BookEntity bookEntity) {
+    protected BookDTO unwrap(Book book) {
         BookDTO bookDTO = new BookDTO();
 
-        bookDTO.setId(bookEntity.getId());
-        bookDTO.setTitle(bookEntity.getTitle());
-        bookDTO.setAuthor(bookEntity.getAuthor());
-        bookDTO.setPublisher(bookEntity.getPublisher());
-        bookDTO.setIsbn(bookEntity.getIsbn());
-        bookDTO.setYear(bookEntity.getYear());
-        bookDTO.setMasterId(bookEntity.getMasterId());
-        bookDTO.setFree(bookEntity.getFree());
-        bookDTO.setUser(_userRepository.unwrap(bookEntity.getUsers()));
+        bookDTO.setId(book.getId());
+        bookDTO.setTitle(book.getTitle());
+        bookDTO.setAuthor(book.getAuthor());
+        bookDTO.setPublisher(book.getPublisher());
+        bookDTO.setIsbn(book.getIsbn());
+        bookDTO.setYear(book.getYear());
+        bookDTO.setMasterId(book.getMasterId());
+        bookDTO.setFree(book.getFree());
+        bookDTO.setUser(_userRepository.unwrap(book.getUsers()));
 
         List<GenreDTO> genres = new ArrayList<GenreDTO>();
 
-        if (bookEntity.getGenreMapEntity() != null) {
-            for (GenreMapEntity genreMapEntity : bookEntity.getGenreMapEntity()) {
-                genres.add(_genreRepository.unwrap(genreMapEntity.getGenreEntity()));
+        if (book.getGenreMap() != null) {
+            for (GenreMap genreMap : book.getGenreMap()) {
+                genres.add(_genreRepository.unwrap(genreMap.getGenre()));
             }
         }
 
@@ -163,11 +163,11 @@ public class BookRepository extends AbstractRepository<Integer, Integer, BookEnt
         return bookDTO;
     }
 
-    private GenreMapEntity wrapMapping (BookEntity bookEntity, GenreDTO genreDTO) {
-        GenreMapEntity genreMapEntity = new GenreMapEntity();
-        genreMapEntity.setBookEntity(bookEntity);
-        genreMapEntity.setGenreEntity(_genreRepository.readOneEntity(genreDTO.getId()));
-        return genreMapEntity;
+    private GenreMap wrapMapping (Book book, GenreDTO genreDTO) {
+        GenreMap genreMap = new GenreMap();
+        genreMap.setBook(book);
+        genreMap.setGenre(_genreRepository.readOneEntity(genreDTO.getId()));
+        return genreMap;
     }
 
 }

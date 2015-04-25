@@ -14,7 +14,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
 import reviewbot.dto.SubgenreDTO;
-import reviewbot.entity.SubgenreEntity;
+import reviewbot.entity.Subgenre;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class SubgenreRepository extends AbstractRepository<Integer, Integer, SubgenreEntity, SubgenreDTO> {
+public class SubgenreRepository extends AbstractRepository<Integer, Integer, Subgenre, SubgenreDTO> {
 
     @Override
     public SubgenreDTO create(SubgenreDTO subgenreDTO) {
@@ -41,17 +41,17 @@ public class SubgenreRepository extends AbstractRepository<Integer, Integer, Sub
     @Override
     public List<SubgenreDTO> readList(Integer[] idsIn) {
         final Integer[] ids = idsIn;
-        List<SubgenreEntity> subgenreEntities = (List<SubgenreEntity>) getHibernateTemplate().execute(new HibernateCallback() {
+        List<Subgenre> subgenreEntities = (List<Subgenre>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
-                Criteria criteria = session.createCriteria(SubgenreEntity.class);
+                Criteria criteria = session.createCriteria(Subgenre.class);
                 criteria.add(Restrictions.in("subgenre", ids));
                 criteria.addOrder(Order.asc("name"));
                 return criteria.list();
             }
         });
         List<SubgenreDTO> subgenreDTOs = new ArrayList<SubgenreDTO>();
-        for (SubgenreEntity subgenreEntity : subgenreEntities) {
-            subgenreDTOs.add(unwrap(subgenreEntity));
+        for (Subgenre subgenre : subgenreEntities) {
+            subgenreDTOs.add(unwrap(subgenre));
         }
         return subgenreDTOs;
     }
@@ -77,22 +77,22 @@ public class SubgenreRepository extends AbstractRepository<Integer, Integer, Sub
     }
 
     @Override
-    protected SubgenreEntity wrap(SubgenreDTO subgenreDTO) {
-        SubgenreEntity subgenreEntity = new SubgenreEntity();
+    protected Subgenre wrap(SubgenreDTO subgenreDTO) {
+        Subgenre subgenre = new Subgenre();
 
-        subgenreEntity.setName(subgenreDTO.getName());
-        subgenreEntity.setDescription(subgenreDTO.getDescription());
+        subgenre.setName(subgenreDTO.getName());
+        subgenre.setDescription(subgenreDTO.getDescription());
 
-        return subgenreEntity;
+        return subgenre;
     }
 
     @Override
-    protected SubgenreDTO unwrap(SubgenreEntity subgenreEntity) {
+    protected SubgenreDTO unwrap(Subgenre subgenre) {
         SubgenreDTO subgenreDTO = new SubgenreDTO();
 
-        subgenreDTO.setId(subgenreEntity.getSubgenre());
-        subgenreDTO.setName(subgenreEntity.getName());
-        subgenreDTO.setDescription(subgenreEntity.getDescription());
+        subgenreDTO.setId(subgenre.getSubgenre());
+        subgenreDTO.setName(subgenre.getName());
+        subgenreDTO.setDescription(subgenre.getDescription());
 
         return subgenreDTO;
     }

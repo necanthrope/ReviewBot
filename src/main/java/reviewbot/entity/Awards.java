@@ -6,12 +6,12 @@ import javax.persistence.*;
  * Created by jtidwell on 4/24/2015.
  */
 @Entity
-@Table(name = "misc")
-public class MiscEntity {
+@Table(name = "awards")
+public class Awards {
 
     @Id
-    @Column(name = "misc")
-    private int misc;
+    @Column(name = "award")
+    private int award;
 
     @Basic
     @Column(name = "name")
@@ -21,12 +21,12 @@ public class MiscEntity {
     @Column(name = "description", columnDefinition="text")
     private String description;
 
-    public int getMisc() {
-        return misc;
+    public int getAward() {
+        return award;
     }
 
-    public void setMisc(int misc) {
-        this.misc = misc;
+    public void setAward(int award) {
+        this.award = award;
     }
 
     public String getName() {
@@ -50,9 +50,9 @@ public class MiscEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        MiscEntity that = (MiscEntity) o;
+        Awards that = (Awards) o;
 
-        if (misc != that.misc) return false;
+        if (award != that.award) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
 
@@ -61,7 +61,7 @@ public class MiscEntity {
 
     @Override
     public int hashCode() {
-        int result = misc;
+        int result = award;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
