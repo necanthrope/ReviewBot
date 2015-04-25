@@ -1,19 +1,19 @@
-package reviewbot.dto;
+package reviewbot.dto.metadata;
 
 /**
- * Created by jtidwell on 4/24/2015.
+ * Created by jtidwell on 4/22/2015.
  */
-public class FormatDTO {
+public class ThemeDTO {
 
-    private int id;
+    private Integer id;
     private String name;
     private String description;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -32,5 +32,4 @@ public class FormatDTO {
     public void setDescription(String description) {
         this.description = description;
     }
-
 }

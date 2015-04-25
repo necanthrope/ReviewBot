@@ -1,4 +1,4 @@
-package reviewbot.entity;
+package reviewbot.entity.metadata;
 
 import javax.persistence.*;
 
@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "formats")
-public class Formats {
+public class Format {
 
     @Id
     @Column(name = "format")
@@ -50,7 +50,7 @@ public class Formats {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Formats that = (Formats) o;
+        Format that = (Format) o;
 
         if (format != that.format) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;

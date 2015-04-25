@@ -1,4 +1,4 @@
-package reviewbot.entity;
+package reviewbot.entity.metadata;
 
 import javax.persistence.*;
 
@@ -6,12 +6,12 @@ import javax.persistence.*;
  * Created by jtidwell on 4/24/2015.
  */
 @Entity
-@Table(name = "awards")
-public class Awards {
+@Table(name = "misc")
+public class Misc {
 
     @Id
-    @Column(name = "award")
-    private int award;
+    @Column(name = "misc")
+    private int misc;
 
     @Basic
     @Column(name = "name")
@@ -21,12 +21,12 @@ public class Awards {
     @Column(name = "description", columnDefinition="text")
     private String description;
 
-    public int getAward() {
-        return award;
+    public int getMisc() {
+        return misc;
     }
 
-    public void setAward(int award) {
-        this.award = award;
+    public void setMisc(int misc) {
+        this.misc = misc;
     }
 
     public String getName() {
@@ -50,9 +50,9 @@ public class Awards {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Awards that = (Awards) o;
+        Misc that = (Misc) o;
 
-        if (award != that.award) return false;
+        if (misc != that.misc) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
 
@@ -61,7 +61,7 @@ public class Awards {
 
     @Override
     public int hashCode() {
-        int result = award;
+        int result = misc;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;

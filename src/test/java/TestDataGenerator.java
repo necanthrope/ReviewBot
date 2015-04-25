@@ -5,9 +5,9 @@
  */
 
 import reviewbot.dto.BookDTO;
-import reviewbot.dto.GenreDTO;
-import reviewbot.dto.SubgenreDTO;
-import reviewbot.dto.ThemeDTO;
+import reviewbot.dto.metadata.GenreDTO;
+import reviewbot.dto.metadata.SubgenreDTO;
+import reviewbot.dto.metadata.ThemeDTO;
 
 /**
  * Created by jtidwell on 4/19/2015.

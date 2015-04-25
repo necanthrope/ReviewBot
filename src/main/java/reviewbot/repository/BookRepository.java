@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
 import reviewbot.dto.BookDTO;
-import reviewbot.dto.GenreDTO;
+import reviewbot.dto.metadata.GenreDTO;
+import reviewbot.dto.metadata.SubgenreDTO;
+import reviewbot.dto.metadata.ThemeDTO;
 import reviewbot.entity.Book;
 import reviewbot.entity.GenreMap;
 
@@ -27,24 +29,54 @@ import java.util.List;
 public class BookRepository extends AbstractRepository<Integer, Integer, Book, BookDTO> {
 
     @Autowired
-    UserRepository _userRepository;
+    private UserRepository _userRepository;
 
     @Autowired
-    GenreRepository _genreRepository;
+    private GenreRepository _genreRepository;
+
+    @Autowired
+    private SubgenreRepository _subgenreRepository;
+
+    @Autowired
+    private ThemeRepository _themeRepository;
+
+    @Autowired
+    private AwardRepository _awardRepository;
+
+    @Autowired
+    private FormatRepository _formatRepository;
+
+    @Autowired
+    private MiscRepository _miscRepository;
 
     @Override
     @Transactional
     public BookDTO create(BookDTO bookDTO) {
         Book book = wrap(bookDTO);
-
         List<GenreMap> genreMapEntities = new ArrayList<GenreMap>();
+        book.setGenreMaps(genreMapEntities);
+
+        // Generate and add genre entities to genre map entity
         if (bookDTO.getGenres() != null) {
             for (GenreDTO genreDTO : bookDTO.getGenres()) {
-                genreMapEntities.add(wrapMapping(book, genreDTO));
+                genreMapEntities.add(_genreRepository.wrapMapping(book, genreDTO));
             }
         }
 
-        book.setGenreMaps(genreMapEntities);
+        // Generate and add subgenre entities to genre map entity
+        if (bookDTO.getSubgenres() != null) {
+            for (SubgenreDTO subgenreDTO : bookDTO.getSubgenres()) {
+                genreMapEntities.add(_subgenreRepository.wrapMapping(book, subgenreDTO));
+            }
+        }
+
+        // Generate and add theme entities to genre map entity
+        if (bookDTO.getThemes() != null) {
+            for (ThemeDTO themeDTO : bookDTO.getThemes()) {
+                genreMapEntities.add(_themeRepository.wrapMapping(book, themeDTO));
+            }
+        }
+
         getCurrentSession().save(book);
         return unwrap(book);
     }
@@ -151,10 +183,24 @@ public class BookRepository extends AbstractRepository<Integer, Integer, Book, B
         bookDTO.setUser(_userRepository.unwrap(book.getUsers()));
 
         List<GenreDTO> genres = new ArrayList<GenreDTO>();
+        bookDTO.setGenres(genres);
+
+        List<SubgenreDTO> subgenres = new ArrayList<SubgenreDTO>();
+        bookDTO.setSubgenres(subgenres);
+
+        List<ThemeDTO> themes = new ArrayList<ThemeDTO>();
+        bookDTO.setThemes(themes);
 
         if (book.getGenreMap() != null) {
             for (GenreMap genreMap : book.getGenreMap()) {
-                genres.add(_genreRepository.unwrap(genreMap.getGenre()));
+                if (genreMap.getGenre() != null)
+                    genres.add(_genreRepository.unwrap(genreMap.getGenre()));
+
+                if (genreMap.getSubgenre() != null)
+                    subgenres.add(_subgenreRepository.unwrap(genreMap.getSubgenre()));
+
+                if (genreMap.getTheme() != null)
+                    themes.add(_themeRepository.unwrap(genreMap.getTheme()));
             }
         }
 
@@ -163,11 +209,5 @@ public class BookRepository extends AbstractRepository<Integer, Integer, Book, B
         return bookDTO;
     }
 
-    private GenreMap wrapMapping (Book book, GenreDTO genreDTO) {
-        GenreMap genreMap = new GenreMap();
-        genreMap.setBook(book);
-        genreMap.setGenre(_genreRepository.readOneEntity(genreDTO.getId()));
-        return genreMap;
-    }
 
 }

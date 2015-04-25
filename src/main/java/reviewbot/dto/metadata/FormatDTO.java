@@ -1,9 +1,9 @@
-package reviewbot.dto;
+package reviewbot.dto.metadata;
 
 /**
  * Created by jtidwell on 4/24/2015.
  */
-public class MiscDTO {
+public class FormatDTO {
 
     private int id;
     private String name;

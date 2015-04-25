@@ -6,6 +6,10 @@
 
 package reviewbot.entity;
 
+import reviewbot.entity.metadata.Genre;
+import reviewbot.entity.metadata.Subgenre;
+import reviewbot.entity.metadata.Theme;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -26,11 +30,11 @@ public class GenreMap implements Serializable{
     //@Column(name="genre_id")
     //private Integer genreId;
 
-    @Column(name="subgenre_id")
-    private Integer subgenreId;
+    //@Column(name="subgenre_id")
+    //private Integer subgenreId;
 
-    @Column(name="theme_id")
-    private Integer themeId;
+    //@Column(name="theme_id")
+    //private Integer themeId;
 
     @Column(name="misc_id")
     private Integer miscId;
@@ -41,12 +45,22 @@ public class GenreMap implements Serializable{
     @Column(name="award_id")
     private Integer awardId;
 
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne//(cascade=CascadeType.ALL)
+    @JoinColumn(name="book_id")
     public Book book;
 
     @OneToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="genre_id", unique=true, nullable=false, insertable=true, updatable=true)
     private Genre genre;
+
+    @OneToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="subgenre_id", unique=true, nullable=false, insertable=true, updatable=true)
+    private Subgenre subgenre;
+
+    @OneToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="theme_id", unique=true, nullable=false, insertable=true, updatable=true)
+    private Theme theme;
+
 
     public Integer getAwardId() {
         return awardId;
@@ -72,15 +86,14 @@ public class GenreMap implements Serializable{
     public void setBookId(Integer bookId) {
         this.bookId = bookId;
     }
-    */
 
-    //public Integer getGenreId() {
-    //    return genreId;
-    //}
+    public Integer getGenreId() {
+        return genreId;
+    }
 
-    //public void setGenreId(Integer genreId) {
-    //    this.genreId = genreId;
-    //}
+    public void setGenreId(Integer genreId) {
+        this.genreId = genreId;
+    }
 
     public Integer getSubgenreId() {
         return subgenreId;
@@ -97,6 +110,7 @@ public class GenreMap implements Serializable{
     public void setThemeId(Integer themeId) {
         this.themeId = themeId;
     }
+    */
 
     public Integer getMiscId() {
         return miscId;
@@ -114,14 +128,6 @@ public class GenreMap implements Serializable{
         this.formatId = formatId;
     }
 
-    public Genre getGenre() {
-        return genre;
-    }
-
-    public void setGenre(Genre genre) {
-        this.genre = genre;
-    }
-
     public Book getBook() {
         return book;
     }
@@ -130,6 +136,28 @@ public class GenreMap implements Serializable{
         this.book = book;
     }
 
+    public Genre getGenre() {
+        return genre;
+    }
 
+    public void setGenre(Genre genre) {
+        this.genre = genre;
+    }
+
+    public Subgenre getSubgenre() {
+        return subgenre;
+    }
+
+    public void setSubgenre(Subgenre subgenre) {
+        this.subgenre = subgenre;
+    }
+
+    public Theme getTheme() {
+        return theme;
+    }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+    }
 
 }

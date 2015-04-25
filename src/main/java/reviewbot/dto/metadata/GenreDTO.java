@@ -1,10 +1,9 @@
-package reviewbot.dto;
+package reviewbot.dto.metadata;
 
 /**
  * Created by jtidwell on 4/22/2015.
  */
-public class ThemeDTO {
-
+public class GenreDTO {
     private Integer id;
     private String name;
     private String description;
@@ -32,4 +31,5 @@ public class ThemeDTO {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }

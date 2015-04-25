@@ -21,7 +21,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -30,10 +29,10 @@ import javax.transaction.Transactional;
 
 import reviewbot.Application;
 import reviewbot.dto.*;
-import reviewbot.repository.BookRepository;
-import reviewbot.repository.GenreRepository;
-import reviewbot.repository.UserRepository;
-import reviewbot.entity.*;
+import reviewbot.dto.metadata.GenreDTO;
+import reviewbot.dto.metadata.SubgenreDTO;
+import reviewbot.dto.metadata.ThemeDTO;
+import reviewbot.repository.*;
 
 import org.json.simple.JSONObject;
 
@@ -53,6 +52,8 @@ import java.util.List;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ApplicationIntegrationTest {
 
+    @Autowired
+    private UserRepository _userRepository;
 
     @Autowired
     private BookRepository _bookRepository;
@@ -61,7 +62,19 @@ public class ApplicationIntegrationTest {
     private GenreRepository _genreRepository;
 
     @Autowired
-    private UserRepository _userRepository;
+    private SubgenreRepository _subgenreRepository;
+
+    @Autowired
+    private ThemeRepository _themeRepository;
+
+    @Autowired
+    private AwardRepository _awardRepository;
+
+    @Autowired
+    private FormatRepository _formatRepository;
+
+    @Autowired
+    private MiscRepository _miscRepository;
 
     private BookDTO _bookDTO;
     private GenreDTO _genreDTO1;
@@ -74,7 +87,6 @@ public class ApplicationIntegrationTest {
 
     @Value("${local.server.port}")
             int port;
-
 
     @Before
     public void setUp() {
@@ -96,6 +108,9 @@ public class ApplicationIntegrationTest {
         //_userDTO = _userRepository.readOne(1);
 
         _genreDTO1 = _genreRepository.create(_genreDTO1);
+        _subgenreDTO1 = _subgenreRepository.create(_subgenreDTO1);
+        _themeDTO1 = _themeRepository.create(_themeDTO1);
+
 
         JSONObject userJson = new JSONObject();
         userJson.put("id", _userDTO.getId());
@@ -103,9 +118,19 @@ public class ApplicationIntegrationTest {
 
         JSONObject genreJson = new JSONObject();
         genreJson.put("id", _genreDTO1.getId());
-
         JSONArray genreDTOs = new JSONArray();
         genreDTOs.add(genreJson);
+
+        JSONObject subgenreJson = new JSONObject();
+        subgenreJson.put("id", _subgenreDTO1.getId());
+        JSONArray subgenreDTOs = new JSONArray();
+        subgenreDTOs.add(subgenreJson);
+
+        JSONObject themeJson = new JSONObject();
+        themeJson.put("id", _themeDTO1.getId());
+        JSONArray themeDTOs = new JSONArray();
+        themeDTOs.add(themeJson);
+
 
         JSONObject bookJson = new JSONObject();
         bookJson.put("title", _bookDTO.getTitle());
@@ -115,6 +140,8 @@ public class ApplicationIntegrationTest {
         bookJson.put("year", _bookDTO.getYear());
         bookJson.put("user", userJson);
         bookJson.put("genres", genreDTOs);
+        bookJson.put("subgenres", subgenreDTOs);
+        bookJson.put("themes", themeDTOs);
 
 
         System.out.println("\n\n\n\nJSON: \n" + bookJson.toJSONString());
@@ -133,7 +160,17 @@ public class ApplicationIntegrationTest {
                 body("publisher", equalTo(_bookDTO.getPublisher())).
                 body("isbn", equalTo(_bookDTO.getIsbn())).
                 body("year", equalTo(_bookDTO.getYear())).
-        log()
+
+                body("genres[0].name", equalTo(_genreDTO1.getName())).
+                body("genres[0].description", equalTo(_genreDTO1.getDescription())).
+
+                body("subgenres[0].name", equalTo(_subgenreDTO1.getName())).
+                body("subgenres[0].description", equalTo(_subgenreDTO1.getDescription())).
+
+                body("themes[0].name", equalTo(_themeDTO1.getName())).
+                body("themes[0].description", equalTo(_themeDTO1.getDescription())).
+
+                log()
                 .ifError().
         extract()
                 .path("id");
@@ -247,21 +284,38 @@ public class ApplicationIntegrationTest {
         if (needsCleaning) {
             _bookRepository.delete(_bookDTO.getId());
         }
-        //_genreRepository.delete(_genreDTO1.getId());
+        if (_genreDTO1.getId() != null)
+            _genreRepository.delete(_genreDTO1.getId());
+
+        if (_subgenreDTO1.getId() != null)
+            _subgenreRepository.delete(_subgenreDTO1.getId());
+
+        if(_themeDTO1.getId() != null)
+            _themeRepository.delete(_themeDTO1.getId());
     }
 
     private void writeDummyData(){
 
+        // Create the metadata objects in the db, so the DTOs have valid IDs.
         _genreDTO1 = _genreRepository.create(_genreDTO1);
+        _subgenreDTO1 = _subgenreRepository.create(_subgenreDTO1);
+        _themeDTO1 = _themeRepository.create(_themeDTO1);
 
         List<GenreDTO> genreDTOs = new ArrayList<GenreDTO>();
         genreDTOs.add(_genreDTO1);
 
+        List<SubgenreDTO> subgenreDTOs = new ArrayList<SubgenreDTO>();
+        subgenreDTOs.add(_subgenreDTO1);
+
+        List<ThemeDTO> themeDTOs = new ArrayList<ThemeDTO>();
+        themeDTOs.add(_themeDTO1);
+
         _bookDTO.setUser(_userDTO);
         _bookDTO.setGenres(genreDTOs);
+        _bookDTO.setSubgenres(subgenreDTOs);
+        _bookDTO.setThemes(themeDTOs);
+
         _bookDTO = _bookRepository.create(_bookDTO);
-
-
 
     }
 

@@ -11,8 +11,11 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
-import reviewbot.dto.GenreDTO;
-import reviewbot.entity.Genre;
+import reviewbot.dto.metadata.AwardDTO;
+import reviewbot.dto.metadata.GenreDTO;
+import reviewbot.entity.Book;
+import reviewbot.entity.GenreMap;
+import reviewbot.entity.metadata.Genre;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -23,7 +26,7 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class GenreRepository extends AbstractRepository<Integer, Integer, Genre, GenreDTO> {
+public class GenreRepository extends AbstractRepository<Integer, Integer, Genre, GenreDTO>{
 
     @Override
     public GenreDTO create(GenreDTO genreDTO) {
@@ -137,4 +140,10 @@ public class GenreRepository extends AbstractRepository<Integer, Integer, Genre,
         return genreDTO;
     }
 
+    public GenreMap wrapMapping (Book book, GenreDTO genreDTO) {
+        GenreMap genreMap = new GenreMap();
+        genreMap.setBook(book);
+        genreMap.setGenre(readOneEntity(genreDTO.getId()));
+        return genreMap;
+    }
 }

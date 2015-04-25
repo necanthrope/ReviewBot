@@ -4,7 +4,7 @@
  * Based on a work at https://github.com/necanthrope/ReviewBot.
  */
 
-package reviewbot.entity;
+package reviewbot.entity.metadata;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -13,26 +13,26 @@ import javax.validation.constraints.Size;
  * Created by jtidwell on 4/7/2015.
  */
 @Entity
-@Table(name="subgenres")
-public class Subgenre {
+@Table(name="themes")
+public class Theme {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer subgenre;
+    private Integer theme;
 
     @Size(min = 1, max=30)
     private String name;
 
-    @Column(name = "description", columnDefinition="text")
+    @Column(name = "description", columnDefinition="text" )
     private String description;
 
 
-    public Integer getSubgenre() {
-        return subgenre;
+    public Integer getTheme() {
+        return theme;
     }
 
-    public void setSubgenre(Integer subgenre) {
-        this.subgenre = subgenre;
+    public void setTheme(Integer theme) {
+        this.theme = theme;
     }
 
     public String getName() {

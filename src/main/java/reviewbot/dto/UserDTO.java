@@ -6,7 +6,7 @@ package reviewbot.dto;
 public class UserDTO {
     private Integer id;
     private String username;
-    private String password;
+    //private String password;
     private String forename;
     private String surname;
     private Integer admin;
@@ -27,6 +27,7 @@ public class UserDTO {
         this.username = username;
     }
 
+    /*
     public String getPassword() {
         return password;
     }
@@ -34,6 +35,7 @@ public class UserDTO {
     public void setPassword(String password) {
         this.password = password;
     }
+    */
 
     public String getForename() {
         return forename;

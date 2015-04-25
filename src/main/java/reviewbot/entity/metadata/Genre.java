@@ -4,7 +4,7 @@
  * Based on a work at https://github.com/necanthrope/ReviewBot.
  */
 
-package reviewbot.entity;
+package reviewbot.entity.metadata;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;

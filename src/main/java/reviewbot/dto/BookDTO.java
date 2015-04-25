@@ -1,5 +1,9 @@
 package reviewbot.dto;
 
+import reviewbot.dto.metadata.GenreDTO;
+import reviewbot.dto.metadata.SubgenreDTO;
+import reviewbot.dto.metadata.ThemeDTO;
+
 import java.util.List;
 
 /**
