@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reviewbot.dto.BookDTO;
 import reviewbot.repository.BookRepository;
-import reviewbot.entity.Book;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +24,9 @@ public class BookController {
     private BookRepository _bookRepo;
 
     /**
-     * Creates a book object in the db, then returns that book with the ID set.
+     * Creates a bookEntity object in the db, then returns that bookEntity with the ID set.
      * @param bookDTO
-     * @return saved book
+     * @return saved bookEntity
      */
     @RequestMapping(value="/createBook", method=RequestMethod.POST)
     public @ResponseBody BookDTO createBook(@RequestBody BookDTO bookDTO) {
@@ -37,7 +36,7 @@ public class BookController {
 
     /**
      * Returns all books in the database.
-     * @return  A JSON list of book objects
+     * @return  A JSON list of bookEntity objects
      */
     @RequestMapping(value="/readBooks", method=RequestMethod.GET, produces="application/json")
     public @ResponseBody List<BookDTO> readBooks(

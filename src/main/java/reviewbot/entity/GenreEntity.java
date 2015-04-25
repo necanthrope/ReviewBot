@@ -13,26 +13,27 @@ import javax.validation.constraints.Size;
  * Created by jtidwell on 4/7/2015.
  */
 @Entity
-@Table(name="themes")
-public class Theme {
+@Table(name="genres")
+public class GenreEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer theme;
+    @Column(name = "id", columnDefinition="smallint")
+    private Integer id;
 
     @Size(min = 1, max=30)
     private String name;
 
-    @Column(name = "description", columnDefinition="text" )
+    @Column(name = "description", columnDefinition="text")
     private String description;
 
 
-    public Integer getTheme() {
-        return theme;
+    public Integer getId() {
+        return id;
     }
 
-    public void setTheme(Integer theme) {
-        this.theme = theme;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -6,10 +6,10 @@ BEGIN;
 SET FOREIGN_KEY_CHECKS=0;
 
 CREATE TABLE `awards` (
-  `award` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `description` text,
-  PRIMARY KEY (`award`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
 
 --
@@ -66,10 +66,10 @@ CREATE TABLE `comments` (
 --
 
 CREATE TABLE `formats` (
-  `format` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(30) DEFAULT NULL,
   `description` text,
-  PRIMARY KEY (`format`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
 --
@@ -77,7 +77,7 @@ CREATE TABLE `formats` (
 --
 
 CREATE TABLE `genre_map` (
-  `book_id` int(11) NOT NULL DEFAULT '0',
+  `bookId` int(11) NOT NULL DEFAULT '0',
   `genre_id` int(11) DEFAULT NULL,
   `theme_id` int(11) DEFAULT NULL,
   `subgenre_id` int(11) DEFAULT NULL,
@@ -102,19 +102,19 @@ CREATE TABLE `genres` (
 --
 
 CREATE TABLE `image_map` (
-  `book_id` int(11) DEFAULT NULL,
+  `bookId` int(11) DEFAULT NULL,
   `image_name` varchar(255) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Table structure for table `misc`
+-- Table structure for table `id`
 --
 
-CREATE TABLE `misc` (
-  `misc` int(11) NOT NULL DEFAULT '0',
+CREATE TABLE `id` (
+  `id` int(11) NOT NULL DEFAULT '0',
   `name` varchar(30) DEFAULT NULL,
   `description` text,
-  PRIMARY KEY (`misc`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 --
@@ -133,7 +133,7 @@ CREATE TABLE `motd` (
 CREATE TABLE `reviews` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `user_id` int(5) NOT NULL DEFAULT '0',
-  `book_id` int(5) NOT NULL DEFAULT '0',
+  `bookId` int(5) NOT NULL DEFAULT '0',
   `body` longtext COLLATE utf8_unicode_ci NOT NULL,
   `rating` varchar(3) COLLATE utf8_unicode_ci DEFAULT NULL,
   `create_date` datetime DEFAULT NULL,
@@ -142,9 +142,9 @@ CREATE TABLE `reviews` (
   `notes` longtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  KEY `book_id` (`book_id`),
+  KEY `bookId` (`bookId`),
   CONSTRAINT `reviews_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `reviews_ibfk_4` FOREIGN KEY (`book_id`) REFERENCES `books` (`id`) ON DELETE CASCADE
+  CONSTRAINT `reviews_ibfk_4` FOREIGN KEY (`bookId`) REFERENCES `books` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=528 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Multiple review records per book';
 
 --

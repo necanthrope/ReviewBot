@@ -17,9 +17,6 @@ import reviewbot.dto.ThemeDTO;
 import reviewbot.repository.GenreRepository;
 import reviewbot.repository.SubgenreRepository;
 import reviewbot.repository.ThemeRepository;
-import reviewbot.entity.Genre;
-import reviewbot.entity.Subgenre;
-import reviewbot.entity.Theme;
 
 import java.util.ArrayList;
 import java.util.List;

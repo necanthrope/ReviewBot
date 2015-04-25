@@ -14,7 +14,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
 import reviewbot.dto.SubgenreDTO;
-import reviewbot.entity.Subgenre;
+import reviewbot.entity.SubgenreEntity;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class SubgenreRepository extends AbstractRepository<Integer, Integer, Subgenre, SubgenreDTO> {
+public class SubgenreRepository extends AbstractRepository<Integer, Integer, SubgenreEntity, SubgenreDTO> {
 
     @Override
     public SubgenreDTO create(SubgenreDTO subgenreDTO) {
@@ -41,17 +41,17 @@ public class SubgenreRepository extends AbstractRepository<Integer, Integer, Sub
     @Override
     public List<SubgenreDTO> readList(Integer[] idsIn) {
         final Integer[] ids = idsIn;
-        List<Subgenre> subgenres = (List<Subgenre>) getHibernateTemplate().execute(new HibernateCallback() {
+        List<SubgenreEntity> subgenreEntities = (List<SubgenreEntity>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
-                Criteria criteria = session.createCriteria(Subgenre.class);
+                Criteria criteria = session.createCriteria(SubgenreEntity.class);
                 criteria.add(Restrictions.in("subgenre", ids));
                 criteria.addOrder(Order.asc("name"));
                 return criteria.list();
             }
         });
         List<SubgenreDTO> subgenreDTOs = new ArrayList<SubgenreDTO>();
-        for (Subgenre subgenre : subgenres) {
-            subgenreDTOs.add(unwrap(subgenre));
+        for (SubgenreEntity subgenreEntity : subgenreEntities) {
+            subgenreDTOs.add(unwrap(subgenreEntity));
         }
         return subgenreDTOs;
     }
@@ -77,12 +77,23 @@ public class SubgenreRepository extends AbstractRepository<Integer, Integer, Sub
     }
 
     @Override
-    protected Subgenre wrap(SubgenreDTO subgenreDTO) {
-        return null;
+    protected SubgenreEntity wrap(SubgenreDTO subgenreDTO) {
+        SubgenreEntity subgenreEntity = new SubgenreEntity();
+
+        subgenreEntity.setName(subgenreDTO.getName());
+        subgenreEntity.setDescription(subgenreDTO.getDescription());
+
+        return subgenreEntity;
     }
 
     @Override
-    protected SubgenreDTO unwrap(Subgenre subgenre) {
-        return null;
+    protected SubgenreDTO unwrap(SubgenreEntity subgenreEntity) {
+        SubgenreDTO subgenreDTO = new SubgenreDTO();
+
+        subgenreDTO.setId(subgenreEntity.getSubgenre());
+        subgenreDTO.setName(subgenreEntity.getName());
+        subgenreDTO.setDescription(subgenreEntity.getDescription());
+
+        return subgenreDTO;
     }
 }

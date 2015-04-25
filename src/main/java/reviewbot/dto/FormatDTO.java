@@ -1,18 +1,19 @@
 package reviewbot.dto;
 
 /**
- * Created by jtidwell on 4/22/2015.
+ * Created by jtidwell on 4/24/2015.
  */
-public class GenreDTO {
-    private Integer id;
+public class FormatDTO {
+
+    private int id;
     private String name;
     private String description;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 

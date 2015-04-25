@@ -8,10 +8,6 @@ import reviewbot.dto.BookDTO;
 import reviewbot.dto.GenreDTO;
 import reviewbot.dto.SubgenreDTO;
 import reviewbot.dto.ThemeDTO;
-import reviewbot.entity.Book;
-import reviewbot.entity.Genre;
-import reviewbot.entity.Subgenre;
-import reviewbot.entity.Theme;
 
 /**
  * Created by jtidwell on 4/19/2015.

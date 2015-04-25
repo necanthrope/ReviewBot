@@ -12,6 +12,7 @@ import static com.jayway.restassured.http.ContentType.JSON;
 
 import configuration.TestDatabaseConfig;
 import org.apache.http.HttpStatus;
+import org.json.simple.JSONArray;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -30,10 +31,14 @@ import javax.transaction.Transactional;
 import reviewbot.Application;
 import reviewbot.dto.*;
 import reviewbot.repository.BookRepository;
+import reviewbot.repository.GenreRepository;
 import reviewbot.repository.UserRepository;
 import reviewbot.entity.*;
 
 import org.json.simple.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jtidwell on 4/10/2015.
@@ -43,14 +48,17 @@ import org.json.simple.JSONObject;
 @SpringApplicationConfiguration(classes = {Application.class, TestDatabaseConfig.class})
 @WebAppConfiguration
 @TransactionConfiguration(defaultRollback = true)
-@IntegrationTest("server.port:9001")
+@org.springframework.boot.test.IntegrationTest("server.port:9001")
 @Transactional
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class ApplicationTest {
+public class ApplicationIntegrationTest {
 
 
     @Autowired
     private BookRepository _bookRepository;
+
+    @Autowired
+    private GenreRepository _genreRepository;
 
     @Autowired
     private UserRepository _userRepository;
@@ -85,12 +93,19 @@ public class ApplicationTest {
     public void test1CanCreateBook() {
 
         //System.out.println("\n\n\nBOOK:" + _bookDTO.getId() + ":" + _bookDTO.getTitle() + "\n\n\n");
-
         //_userDTO = _userRepository.readOne(1);
+
+        _genreDTO1 = _genreRepository.create(_genreDTO1);
 
         JSONObject userJson = new JSONObject();
         userJson.put("id", _userDTO.getId());
         userJson.put("username", _userDTO.getUsername());
+
+        JSONObject genreJson = new JSONObject();
+        genreJson.put("id", _genreDTO1.getId());
+
+        JSONArray genreDTOs = new JSONArray();
+        genreDTOs.add(genreJson);
 
         JSONObject bookJson = new JSONObject();
         bookJson.put("title", _bookDTO.getTitle());
@@ -99,10 +114,11 @@ public class ApplicationTest {
         bookJson.put("isbn", _bookDTO.getIsbn());
         bookJson.put("year", _bookDTO.getYear());
         bookJson.put("user", userJson);
+        bookJson.put("genres", genreDTOs);
 
 
-        //System.out.println("\n\n\n\nJSON: \n" + bookJson.toJSONString());
-        //System.out.println("\nJSON: \n" + userJson.toJSONString() + "\n\n\n\n");
+        System.out.println("\n\n\n\nJSON: \n" + bookJson.toJSONString());
+        System.out.println("\nJSON: \n" + genreDTOs.toJSONString() + "\n\n\n\n");
 
         Integer bookId = given().
                 contentType(JSON).
@@ -125,13 +141,13 @@ public class ApplicationTest {
         _bookDTO.setId(bookId);
 
         //System.out.println("\n\n\n **" + bookId + "**\n\n\n");
+        System.out.println("\n\n\n\n CREATED BOOK: \n" + get("/readBook?id=".concat(_bookDTO.getId().toString())).asString() + "\n\n\n\n");
 
     }
 
     @Test
     public void test2CanReadBooks() {
-        _bookDTO.setUser(_userDTO);
-        _bookDTO = _bookRepository.create(_bookDTO);
+        writeDummyData();
 
         //System.out.println("\n\n\n\n" + get("/books?length=1&offset=0").asString() + "\n\n\n\n");
 
@@ -153,8 +169,7 @@ public class ApplicationTest {
     @Test
     public void test3CanReadBook() {
 
-        _bookDTO.setUser(_userDTO);
-        _bookDTO = _bookRepository.create(_bookDTO);
+        writeDummyData();
         //System.out.println("\n\n\n\n" + get("/readBook?id=".concat(_bookDTO.getId().toString())).asString() + "\n\n\n\n");
 
         when().
@@ -174,8 +189,7 @@ public class ApplicationTest {
 
     @Test
     public void test4CanUpdateBook() {
-        _bookDTO.setUser(_userDTO);
-        _bookDTO = _bookRepository.create(_bookDTO);
+        writeDummyData();
 
         BookDTO book2 = TestDataGenerator.createBook();
         book2.setUser(_userDTO);
@@ -216,8 +230,7 @@ public class ApplicationTest {
 
     @Test
     public void test5CanDeleteBook() {
-        _bookDTO.setUser(_userDTO);
-        _bookDTO = _bookRepository.create(_bookDTO);
+        writeDummyData();
 
         when().
                 get("/deleteBook?id=".concat(_bookDTO.getId().toString())).
@@ -234,6 +247,22 @@ public class ApplicationTest {
         if (needsCleaning) {
             _bookRepository.delete(_bookDTO.getId());
         }
+        //_genreRepository.delete(_genreDTO1.getId());
+    }
+
+    private void writeDummyData(){
+
+        _genreDTO1 = _genreRepository.create(_genreDTO1);
+
+        List<GenreDTO> genreDTOs = new ArrayList<GenreDTO>();
+        genreDTOs.add(_genreDTO1);
+
+        _bookDTO.setUser(_userDTO);
+        _bookDTO.setGenres(genreDTOs);
+        _bookDTO = _bookRepository.create(_bookDTO);
+
+
+
     }
 
 }

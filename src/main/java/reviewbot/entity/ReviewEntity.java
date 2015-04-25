@@ -18,7 +18,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name="reviews")
-public class Review {
+public class ReviewEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

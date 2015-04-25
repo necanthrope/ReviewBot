@@ -6,16 +6,13 @@
 
 package reviewbot.repository;
 
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
 import reviewbot.dto.GenreDTO;
-import reviewbot.entity.Genre;
+import reviewbot.entity.GenreEntity;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -26,25 +23,67 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class GenreRepository extends AbstractRepository<Integer, Integer, Genre, GenreDTO> {
+public class GenreRepository extends AbstractRepository<Integer, Integer, GenreEntity, GenreDTO> {
 
     @Override
     public GenreDTO create(GenreDTO genreDTO) {
-        return null;
+        GenreEntity genreEntity = wrap(genreDTO);
+        getCurrentSession().save(genreEntity);
+        return unwrap(genreEntity);
+    }
+
+    @Override
+    public List<GenreDTO> readAll() {
+        List<GenreEntity> genreEntities = _entityManager.createQuery("from Genre").getResultList();
+        List<GenreDTO> genreDTOs = new ArrayList<GenreDTO>();
+        for (GenreEntity genreEntity : genreEntities) {
+            genreDTOs.add(unwrap(genreEntity));
+        }
+        return genreDTOs;
+    }
+
+    @Override
+    public List<GenreDTO> readRange(Integer offset, Integer length) {
+
+        final Integer len = length;
+        final Integer offs = offset;
+
+        List<GenreEntity> genreEntities = (List<GenreEntity>) getHibernateTemplate().execute(new HibernateCallback() {
+            public Object doInHibernate(Session session) throws HibernateException {
+                Query q = getSessionFactory().getCurrentSession().createQuery("from Genre");
+                q.setFirstResult(offs);
+                q.setMaxResults(len);
+                return q.list();
+            }
+        });
+
+        List<GenreDTO> genreDTOs = new ArrayList<GenreDTO>();
+        for (GenreEntity genreEntity : genreEntities) {
+            genreDTOs.add(unwrap(genreEntity));
+        }
+        return genreDTOs;
+
     }
 
     @Override
     public GenreDTO readOne(Integer id) {
-        return null;
+        return unwrap(readOneEntity(id));
+    }
+
+    public GenreEntity readOneEntity(Integer id) {
+
+        if (id == null)
+            return new GenreEntity();
+        return (GenreEntity) getCurrentSession().get(GenreEntity.class, id);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<GenreDTO> readList(Integer[] idsIn) {
         final Integer[] ids = idsIn;
-        List<Genre> genres = (List<Genre>) getHibernateTemplate().execute(new HibernateCallback() {
+        List<GenreEntity> genreEntities = (List<GenreEntity>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
-                Criteria criteria = session.createCriteria(Genre.class);
+                Criteria criteria = session.createCriteria(GenreEntity.class);
                 criteria.add(Restrictions.in("id",ids));
                 criteria.addOrder(Order.asc("name"));
                 return criteria.list();
@@ -52,40 +91,50 @@ public class GenreRepository extends AbstractRepository<Integer, Integer, Genre,
         });
 
         List<GenreDTO> genreDTOs = new ArrayList<GenreDTO>();
-        for (Genre genre : genres) {
-            genreDTOs.add(unwrap(genre));
+        for (GenreEntity genreEntity : genreEntities) {
+            genreDTOs.add(unwrap(genreEntity));
         }
         return genreDTOs;
     }
 
     @Override
-    public List<GenreDTO> readRange(Integer offset, Integer length) {
-        return null;
-    }
+    public void update(GenreDTO genreDTO) {
+        GenreEntity genreEntity = (GenreEntity) getCurrentSession().get(GenreEntity.class, genreDTO.getId());
 
-    @Override
-    public List<GenreDTO> readAll() {
-        return null;
-    }
+        genreEntity.setName(genreDTO.getName());
+        genreEntity.setDescription(genreDTO.getDescription());
 
-    @Override
-    public void update(GenreDTO genre) {
-
+        getCurrentSession().merge(genreEntity);
     }
 
     @Override
     public void delete(Integer id) {
-
+        GenreEntity genreEntity = (GenreEntity) getCurrentSession().get(GenreEntity.class, id);
+        if (genreEntity != null) {
+            getCurrentSession().delete(genreEntity);
+            getCurrentSession().flush();
+        }
     }
 
     @Override
-    protected Genre wrap(GenreDTO genreDTO) {
-        return null;
+    protected GenreEntity wrap(GenreDTO genreDTO) {
+        GenreEntity genreEntity = new GenreEntity();
+
+        genreEntity.setName(genreDTO.getName());
+        genreEntity.setDescription(genreDTO.getDescription());
+
+        return genreEntity;
     }
 
     @Override
-    protected GenreDTO unwrap(Genre genre) {
-        return null;
+    protected GenreDTO unwrap(GenreEntity genreEntity) {
+        GenreDTO genreDTO = new GenreDTO();
+
+        genreDTO.setId(genreEntity.getId());
+        genreDTO.setName(genreEntity.getName());
+        genreDTO.setDescription(genreEntity.getDescription());
+
+        return genreDTO;
     }
 
 }

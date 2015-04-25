@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="users")
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,7 +35,7 @@ public class User {
     private String surname;
 
     //@OneToMany(fetch = FetchType.EAGER)
-    //private List<Book> books;
+    //private List<BookEntity> books;
 
     @Column(name = "admin", columnDefinition="bit")
     private Integer admin;

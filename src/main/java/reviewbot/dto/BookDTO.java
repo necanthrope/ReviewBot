@@ -1,8 +1,5 @@
 package reviewbot.dto;
 
-import reviewbot.entity.GenreMap;
-import reviewbot.entity.User;
-
 import java.util.List;
 
 /**
@@ -15,13 +12,15 @@ public class BookDTO {
     private String author;
     private String publisher;
     private String isbn;
-    private Byte genre;
-    private Byte subgenre;
     private String year;
     private String masterId;
     private String free;
     private UserDTO user;
-    private List<GenreMap> genreMap;
+
+    private List<GenreDTO> genres;
+    private List<SubgenreDTO> subgenres;
+    private List<ThemeDTO> themes;
+
 
     public Integer getId() {
         return id;
@@ -63,22 +62,6 @@ public class BookDTO {
         this.isbn = isbn;
     }
 
-    public Byte getGenre() {
-        return genre;
-    }
-
-    public void setGenre(Byte genre) {
-        this.genre = genre;
-    }
-
-    public Byte getSubgenre() {
-        return subgenre;
-    }
-
-    public void setSubgenre(Byte subgenre) {
-        this.subgenre = subgenre;
-    }
-
     public String getYear() {
         return year;
     }
@@ -111,12 +94,28 @@ public class BookDTO {
         this.user = userDTO;
     }
 
-    public List<GenreMap> getGenreMap() {
-        return genreMap;
+    public List<GenreDTO> getGenres() {
+        return genres;
     }
 
-    public void setGenreMap(List<GenreMap> genreMap) {
-        this.genreMap = genreMap;
+    public void setGenres(List<GenreDTO> genres) {
+        this.genres = genres;
+    }
+
+    public List<SubgenreDTO> getSubgenres() {
+        return subgenres;
+    }
+
+    public void setSubgenres(List<SubgenreDTO> subgenres) {
+        this.subgenres = subgenres;
+    }
+
+    public List<ThemeDTO> getThemes() {
+        return themes;
+    }
+
+    public void setThemes(List<ThemeDTO> themes) {
+        this.themes = themes;
     }
 
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 import reviewbot.dto.UserDTO;
-import reviewbot.entity.User;
+import reviewbot.entity.UserEntity;
 
 import javax.transaction.Transactional;
 
@@ -19,7 +19,7 @@ import javax.transaction.Transactional;
  */
 @Repository
 @Transactional
-public class UserRepository extends AbstractRepository<Integer, Integer, User, UserDTO> {
+public class UserRepository extends AbstractRepository<Integer, Integer, UserEntity, UserDTO> {
     @Override
     public UserDTO create(UserDTO userDTO) {
         return null;
@@ -27,8 +27,8 @@ public class UserRepository extends AbstractRepository<Integer, Integer, User, U
 
     @Override
     public UserDTO readOne(Integer id) {
-        User user = (User) getCurrentSession().get(User.class, id);
-        return unwrap(user);
+        UserEntity userEntity = (UserEntity) getCurrentSession().get(UserEntity.class, id);
+        return unwrap(userEntity);
     }
 
     @Override
@@ -57,28 +57,28 @@ public class UserRepository extends AbstractRepository<Integer, Integer, User, U
     }
 
     @Override
-    protected User wrap(UserDTO userDTO) {
-        User user = new User();
+    protected UserEntity wrap(UserDTO userDTO) {
+        UserEntity userEntity = new UserEntity();
 
-        user.setId(userDTO.getId());
-        user.setUsername(userDTO.getUsername());
-        //user.setPassword(userDTO.getPassword());
-        user.setForename(userDTO.getForename());
-        user.setSurname(user.getSurname());
-        user.setAdmin(user.getAdmin());
+        userEntity.setId(userDTO.getId());
+        userEntity.setUsername(userDTO.getUsername());
+        //userEntity.setPassword(userDTO.getPassword());
+        userEntity.setForename(userDTO.getForename());
+        userEntity.setSurname(userEntity.getSurname());
+        userEntity.setAdmin(userEntity.getAdmin());
 
-        return user;
+        return userEntity;
     }
 
     @Override
-    protected UserDTO unwrap(User user) {
+    protected UserDTO unwrap(UserEntity userEntity) {
         UserDTO userDTO = new UserDTO();
 
-        userDTO.setId(user.getId());
-        userDTO.setUsername(user.getUsername());
-        userDTO.setForename(user.getForename());
-        userDTO.setSurname(user.getSurname());
-        userDTO.setAdmin(user.getAdmin());
+        userDTO.setId(userEntity.getId());
+        userDTO.setUsername(userEntity.getUsername());
+        userDTO.setForename(userEntity.getForename());
+        userDTO.setSurname(userEntity.getSurname());
+        userDTO.setAdmin(userEntity.getAdmin());
 
         return userDTO;
     }

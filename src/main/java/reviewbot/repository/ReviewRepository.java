@@ -12,7 +12,7 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
 import reviewbot.dto.ReviewDTO;
-import reviewbot.entity.Review;
+import reviewbot.entity.ReviewEntity;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class ReviewRepository extends AbstractRepository<Integer, Integer, Review, ReviewDTO> {
+public class ReviewRepository extends AbstractRepository<Integer, Integer, ReviewEntity, ReviewDTO> {
 
     @Override
     public ReviewDTO create(ReviewDTO review) {
@@ -33,11 +33,11 @@ public class ReviewRepository extends AbstractRepository<Integer, Integer, Revie
     @Override
     @SuppressWarnings("unchecked")
     public List<ReviewDTO> readAll() {
-        List<Review> reviews = _entityManager.createQuery("from Review").getResultList();
+        List<ReviewEntity> reviewEntities = _entityManager.createQuery("from Review").getResultList();
 
         List<ReviewDTO> reviewDTOs = new ArrayList<ReviewDTO>();
-        for (Review review : reviews) {
-            reviewDTOs.add(unwrap(review));
+        for (ReviewEntity reviewEntity : reviewEntities) {
+            reviewDTOs.add(unwrap(reviewEntity));
         }
         return reviewDTOs;
     }
@@ -50,7 +50,7 @@ public class ReviewRepository extends AbstractRepository<Integer, Integer, Revie
         final Integer len = length;
         final Integer offs = offset;
 
-        List<Review> reviews =  (List<Review>) getHibernateTemplate().execute(new HibernateCallback() {
+        List<ReviewEntity> reviewEntities =  (List<ReviewEntity>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
                 Query q = session.createQuery("from Review");
                 q.setFirstResult(offs);
@@ -60,8 +60,8 @@ public class ReviewRepository extends AbstractRepository<Integer, Integer, Revie
         });
 
         List<ReviewDTO> reviewDTOs = new ArrayList<ReviewDTO>();
-        for (Review review : reviews) {
-            reviewDTOs.add(unwrap(review));
+        for (ReviewEntity reviewEntity : reviewEntities) {
+            reviewDTOs.add(unwrap(reviewEntity));
         }
         return reviewDTOs;
 
@@ -69,7 +69,7 @@ public class ReviewRepository extends AbstractRepository<Integer, Integer, Revie
 
     @Override
     public ReviewDTO readOne(Integer id) {
-        return unwrap(_entityManager.find(Review.class, id));
+        return unwrap(_entityManager.find(ReviewEntity.class, id));
     }
 
     @Override
@@ -88,13 +88,21 @@ public class ReviewRepository extends AbstractRepository<Integer, Integer, Revie
     }
 
     @Override
-    protected Review wrap(ReviewDTO reviewDTO) {
-        return null;
+    protected ReviewEntity wrap(ReviewDTO reviewDTO) {
+        ReviewEntity reviewEntity = new ReviewEntity();
+
+
+
+        return reviewEntity;
     }
 
     @Override
-    protected ReviewDTO unwrap(Review review) {
-        return null;
+    protected ReviewDTO unwrap(ReviewEntity reviewEntity) {
+        ReviewDTO reviewDTO = new ReviewDTO();
+
+
+
+        return reviewDTO;
     }
 
 }

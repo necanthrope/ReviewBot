@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reviewbot.dto.ReviewDTO;
 import reviewbot.repository.ReviewRepository;
-import reviewbot.entity.Review;
 
 import java.util.ArrayList;
 import java.util.List;

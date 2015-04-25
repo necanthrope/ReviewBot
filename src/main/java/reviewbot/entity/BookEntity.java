@@ -11,25 +11,20 @@ package reviewbot.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by jtidwell on 4/6/2015.
  */
 @Entity
 @Table(name="books")
-public class Book {
+public class BookEntity {
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id")
     private Integer id;
-
-    //@Column(name="user_id")
-    //private Integer userId;
 
     @NotNull
     @Size(min = 1, max=255)
@@ -53,18 +48,18 @@ public class Book {
     private String year;
 
     @Size(min = 1, max=127)
-		@Column(name="master_id")
+    @Column(name="master_id")
     private String masterId;
 
     @Size(min = 1, max=5)
     private String free;
 
     @OneToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="user_id", unique= true, nullable=false, insertable=true, updatable=true)
-    private User users;
+    @JoinColumn(name="user_id", unique=true, nullable=false, insertable=true, updatable=true)
+    private UserEntity users;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="book_id")
-    private List<GenreMap> genreMap;
+    @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="bookEntity")
+    private List<GenreMapEntity> genreMapEntity;
 
     public Integer getId() {
         return id;
@@ -74,14 +69,6 @@ public class Book {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    //public Integer getUserId() {
-    //    return userId;
-    //}
-
-    //public void setUserId(Integer userId) {
-    //    this.userId = userId;
-    //}
 
     public String getTitle() {
         return title;
@@ -155,34 +142,25 @@ public class Book {
         this.free = free;
     }
 
-    public List<GenreMap> getGenreMap() {
-        return genreMap;
+    public List<GenreMapEntity> getGenreMapEntity() {
+        return genreMapEntity;
     }
 
-    public void setGenreMaps(List<GenreMap> genreMaps) {
-        this.genreMap = genreMaps;
+    public void setGenreMaps(List<GenreMapEntity> genreMapEntities) {
+        this.genreMapEntity = genreMapEntities;
     }
 
-    public User getUsers() {
+    public UserEntity getUsers() {
         return users;
     }
 
-    public void setUsers(User user) {
-        this.users = user;
+    public void setUsers(UserEntity userEntity) {
+        this.users = userEntity;
     }
 
     @Override
     public String toString(){
         return "{ID="+id+",Title="+title+",Publisher="+publisher+"}";
     }
-
-
-
-
-
-
-
-
-
 
 }
