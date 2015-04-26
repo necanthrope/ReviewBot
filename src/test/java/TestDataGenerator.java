@@ -5,9 +5,7 @@
  */
 
 import reviewbot.dto.BookDTO;
-import reviewbot.dto.metadata.GenreDTO;
-import reviewbot.dto.metadata.SubgenreDTO;
-import reviewbot.dto.metadata.ThemeDTO;
+import reviewbot.dto.metadata.*;
 
 /**
  * Created by jtidwell on 4/19/2015.
@@ -48,4 +46,29 @@ public class TestDataGenerator {
 
         return themeDTO;
     }
+
+    public static AwardDTO createAward() {
+        AwardDTO awardDTO = new AwardDTO();
+        awardDTO.setName(Double.toString((Math.random() * 20)));
+        awardDTO.setDescription(Double.toString((Math.random() * 100)));
+
+        return awardDTO;
+    }
+
+    public static FormatDTO createFormat() {
+        FormatDTO formatDTO = new FormatDTO();
+        formatDTO.setName(Double.toString((Math.random() * 20)));
+        formatDTO.setDescription(Double.toString((Math.random() * 100)));
+
+        return formatDTO;
+    }
+
+    public static MiscDTO createMisc() {
+        MiscDTO miscDTO = new MiscDTO();
+        miscDTO.setName(Double.toString((Math.random() * 20)));
+        miscDTO.setDescription(Double.toString((Math.random() * 100)));
+
+        return miscDTO;
+    }
+
 }

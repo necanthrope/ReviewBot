@@ -9,6 +9,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
 import reviewbot.dto.metadata.MiscDTO;
+import reviewbot.entity.Book;
+import reviewbot.entity.GenreMap;
 import reviewbot.entity.metadata.Misc;
 import reviewbot.repository.AbstractRepository;
 
@@ -133,6 +135,13 @@ public class MiscRepository  extends AbstractRepository<Integer, Integer, Misc, 
         miscDTO.setDescription(misc.getDescription());
 
         return miscDTO;
+    }
+
+    public GenreMap wrapMapping (Book book, MiscDTO miscDTO) {
+        GenreMap genreMap = new GenreMap();
+        genreMap.setBook(book);
+        genreMap.setMisc(readOneEntity(miscDTO.getId()));
+        return genreMap;
     }
 
 }

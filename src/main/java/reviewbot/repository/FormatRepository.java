@@ -9,6 +9,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
 import reviewbot.dto.metadata.FormatDTO;
+import reviewbot.entity.Book;
+import reviewbot.entity.GenreMap;
 import reviewbot.entity.metadata.Format;
 import reviewbot.repository.AbstractRepository;
 
@@ -133,6 +135,13 @@ public class FormatRepository  extends AbstractRepository<Integer, Integer, Form
         formatDTO.setDescription(format.getDescription());
 
         return formatDTO;
+    }
+
+    public GenreMap wrapMapping (Book book, FormatDTO formatDTO) {
+        GenreMap genreMap = new GenreMap();
+        genreMap.setBook(book);
+        genreMap.setFormat(readOneEntity(formatDTO.getId()));
+        return genreMap;
     }
 
 }

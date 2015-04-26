@@ -10,8 +10,9 @@ import javax.persistence.*;
 public class Award {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "award")
-    private int award;
+    private Integer award;
 
     @Basic
     @Column(name = "name")
@@ -21,11 +22,11 @@ public class Award {
     @Column(name = "description", columnDefinition="text")
     private String description;
 
-    public int getAward() {
+    public Integer getAward() {
         return award;
     }
 
-    public void setAward(int award) {
+    public void setAward(Integer award) {
         this.award = award;
     }
 

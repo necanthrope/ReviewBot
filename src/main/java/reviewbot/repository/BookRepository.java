@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
 import reviewbot.dto.BookDTO;
-import reviewbot.dto.metadata.GenreDTO;
-import reviewbot.dto.metadata.SubgenreDTO;
-import reviewbot.dto.metadata.ThemeDTO;
+import reviewbot.dto.metadata.*;
 import reviewbot.entity.Book;
 import reviewbot.entity.GenreMap;
 
@@ -76,6 +74,30 @@ public class BookRepository extends AbstractRepository<Integer, Integer, Book, B
                 genreMapEntities.add(_themeRepository.wrapMapping(book, themeDTO));
             }
         }
+
+        // Generate and add award entities to genre map entity
+        if (bookDTO.getAwards() != null) {
+            for (AwardDTO awardDTO : bookDTO.getAwards()) {
+                genreMapEntities.add(_awardRepository.wrapMapping(book, awardDTO));
+            }
+        }
+
+        // Generate and add format entities to genre map entity
+        if (bookDTO.getFormats() != null) {
+            for (FormatDTO formatDTO : bookDTO.getFormats()) {
+                genreMapEntities.add(_formatRepository.wrapMapping(book, formatDTO));
+            }
+        }
+
+        // Generate and add misc entities to genre map entity
+        if (bookDTO.getMisc() != null) {
+            for (MiscDTO miscDTO : bookDTO.getMisc()) {
+                genreMapEntities.add(_miscRepository.wrapMapping(book, miscDTO));
+            }
+        }
+
+
+
 
         getCurrentSession().save(book);
         return unwrap(book);
@@ -191,6 +213,15 @@ public class BookRepository extends AbstractRepository<Integer, Integer, Book, B
         List<ThemeDTO> themes = new ArrayList<ThemeDTO>();
         bookDTO.setThemes(themes);
 
+        List<FormatDTO> formats = new ArrayList<FormatDTO>();
+        bookDTO.setFormats(formats);
+
+        List<AwardDTO> awards = new ArrayList<AwardDTO>();
+        bookDTO.setAwards(awards);
+
+        List<MiscDTO> misc = new ArrayList<MiscDTO>();
+        bookDTO.setMisc(misc);
+
         if (book.getGenreMap() != null) {
             for (GenreMap genreMap : book.getGenreMap()) {
                 if (genreMap.getGenre() != null)
@@ -201,6 +232,15 @@ public class BookRepository extends AbstractRepository<Integer, Integer, Book, B
 
                 if (genreMap.getTheme() != null)
                     themes.add(_themeRepository.unwrap(genreMap.getTheme()));
+
+                if (genreMap.getAward() != null)
+                    awards.add(_awardRepository.unwrap(genreMap.getAward()));
+
+                if (genreMap.getFormat() != null)
+                    formats.add(_formatRepository.unwrap(genreMap.getFormat()));
+
+                if (genreMap.getMisc() != null)
+                    misc.add(_miscRepository.unwrap(genreMap.getMisc()));
             }
         }
 

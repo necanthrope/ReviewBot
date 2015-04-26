@@ -29,9 +29,7 @@ import javax.transaction.Transactional;
 
 import reviewbot.Application;
 import reviewbot.dto.*;
-import reviewbot.dto.metadata.GenreDTO;
-import reviewbot.dto.metadata.SubgenreDTO;
-import reviewbot.dto.metadata.ThemeDTO;
+import reviewbot.dto.metadata.*;
 import reviewbot.repository.*;
 
 import org.json.simple.JSONObject;
@@ -80,6 +78,9 @@ public class ApplicationIntegrationTest {
     private GenreDTO _genreDTO1;
     private SubgenreDTO _subgenreDTO1;
     private ThemeDTO _themeDTO1;
+    private AwardDTO _awardDTO1;
+    private FormatDTO _formatDTO1;
+    private MiscDTO _miscDTO1;
 
     private UserDTO _userDTO;
 
@@ -96,6 +97,9 @@ public class ApplicationIntegrationTest {
         _genreDTO1 = TestDataGenerator.createGenre();
         _subgenreDTO1 = TestDataGenerator.createSubgenre();
         _themeDTO1 = TestDataGenerator.createTheme();
+        _awardDTO1 = TestDataGenerator.createAward();
+        _formatDTO1 = TestDataGenerator.createFormat();
+        _miscDTO1 = TestDataGenerator.createMisc();
 
         _userDTO = _userRepository.readOne(1);
 
@@ -110,6 +114,9 @@ public class ApplicationIntegrationTest {
         _genreDTO1 = _genreRepository.create(_genreDTO1);
         _subgenreDTO1 = _subgenreRepository.create(_subgenreDTO1);
         _themeDTO1 = _themeRepository.create(_themeDTO1);
+        _awardDTO1 = _awardRepository.create(_awardDTO1);
+        _formatDTO1 = _formatRepository.create(_formatDTO1);
+        _miscDTO1 = _miscRepository.create(_miscDTO1);
 
 
         JSONObject userJson = new JSONObject();
@@ -131,6 +138,20 @@ public class ApplicationIntegrationTest {
         JSONArray themeDTOs = new JSONArray();
         themeDTOs.add(themeJson);
 
+        JSONObject awardJson = new JSONObject();
+        awardJson.put("id", _awardDTO1.getId());
+        JSONArray awardDTOs = new JSONArray();
+        awardDTOs.add(awardJson);
+
+        JSONObject formatJson = new JSONObject();
+        formatJson.put("id", _formatDTO1.getId());
+        JSONArray formatDTOs = new JSONArray();
+        formatDTOs.add(formatJson);
+
+        JSONObject miscJson = new JSONObject();
+        miscJson.put("id", _miscDTO1.getId());
+        JSONArray miscDTOs = new JSONArray();
+        miscDTOs.add(miscJson);
 
         JSONObject bookJson = new JSONObject();
         bookJson.put("title", _bookDTO.getTitle());
@@ -139,9 +160,13 @@ public class ApplicationIntegrationTest {
         bookJson.put("isbn", _bookDTO.getIsbn());
         bookJson.put("year", _bookDTO.getYear());
         bookJson.put("user", userJson);
+
         bookJson.put("genres", genreDTOs);
         bookJson.put("subgenres", subgenreDTOs);
         bookJson.put("themes", themeDTOs);
+        bookJson.put("awards", awardDTOs);
+        bookJson.put("formats", formatDTOs);
+        bookJson.put("misc", miscDTOs);
 
 
         System.out.println("\n\n\n\nJSON: \n" + bookJson.toJSONString());
@@ -169,6 +194,15 @@ public class ApplicationIntegrationTest {
 
                 body("themes[0].name", equalTo(_themeDTO1.getName())).
                 body("themes[0].description", equalTo(_themeDTO1.getDescription())).
+
+                body("awards[0].name", equalTo(_awardDTO1.getName())).
+                body("awards[0].description", equalTo(_awardDTO1.getDescription())).
+
+                body("formats[0].name", equalTo(_formatDTO1.getName())).
+                body("formats[0].description", equalTo(_formatDTO1.getDescription())).
+
+                body("misc[0].name", equalTo(_miscDTO1.getName())).
+                body("misc[0].description", equalTo(_miscDTO1.getDescription())).
 
                 log()
                 .ifError().
@@ -300,6 +334,10 @@ public class ApplicationIntegrationTest {
         _genreDTO1 = _genreRepository.create(_genreDTO1);
         _subgenreDTO1 = _subgenreRepository.create(_subgenreDTO1);
         _themeDTO1 = _themeRepository.create(_themeDTO1);
+//        _awardDTO1 = _awardRepository.create(_awardDTO1);
+//        _formatDTO1 = _formatRepository.create(_formatDTO1);
+//        _miscDTO1 = _miscRepository.create(_miscDTO1);
+
 
         List<GenreDTO> genreDTOs = new ArrayList<GenreDTO>();
         genreDTOs.add(_genreDTO1);

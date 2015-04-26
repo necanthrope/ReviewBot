@@ -10,8 +10,9 @@ import javax.persistence.*;
 public class Misc {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "misc")
-    private int misc;
+    private Integer misc;
 
     @Basic
     @Column(name = "name")
@@ -21,11 +22,11 @@ public class Misc {
     @Column(name = "description", columnDefinition="text")
     private String description;
 
-    public int getMisc() {
+    public Integer getMisc() {
         return misc;
     }
 
-    public void setMisc(int misc) {
+    public void setMisc(Integer misc) {
         this.misc = misc;
     }
 

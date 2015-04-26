@@ -10,8 +10,9 @@ import javax.persistence.*;
 public class Format {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "format")
-    private int format;
+    private Integer format;
 
     @Basic
     @Column(name = "name")
@@ -21,11 +22,11 @@ public class Format {
     @Column(name = "description", columnDefinition="text")
     private String description;
 
-    public int getFormat() {
+    public Integer getFormat() {
         return format;
     }
 
-    public void setFormat(int format) {
+    public void setFormat(Integer format) {
         this.format = format;
     }
 

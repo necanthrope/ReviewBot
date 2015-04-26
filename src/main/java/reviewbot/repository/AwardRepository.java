@@ -9,6 +9,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
 import reviewbot.dto.metadata.AwardDTO;
+import reviewbot.entity.Book;
+import reviewbot.entity.GenreMap;
 import reviewbot.entity.metadata.Award;
 import reviewbot.repository.AbstractRepository;
 
@@ -133,6 +135,13 @@ public class AwardRepository  extends AbstractRepository<Integer, Integer, Award
         awardDTO.setDescription(award.getDescription());
 
         return awardDTO;
+    }
+
+    public GenreMap wrapMapping (Book book, AwardDTO awardDTO) {
+        GenreMap genreMap = new GenreMap();
+        genreMap.setBook(book);
+        genreMap.setAward(readOneEntity(awardDTO.getId()));
+        return genreMap;
     }
 
 

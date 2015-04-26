@@ -1,8 +1,7 @@
 package reviewbot.dto;
 
-import reviewbot.dto.metadata.GenreDTO;
-import reviewbot.dto.metadata.SubgenreDTO;
-import reviewbot.dto.metadata.ThemeDTO;
+import reviewbot.dto.metadata.*;
+import reviewbot.entity.metadata.Misc;
 
 import java.util.List;
 
@@ -24,6 +23,9 @@ public class BookDTO {
     private List<GenreDTO> genres;
     private List<SubgenreDTO> subgenres;
     private List<ThemeDTO> themes;
+    private List<AwardDTO> awards;
+    private List<FormatDTO> formats;
+    private List<MiscDTO> misc;
 
 
     public Integer getId() {
@@ -120,6 +122,30 @@ public class BookDTO {
 
     public void setThemes(List<ThemeDTO> themes) {
         this.themes = themes;
+    }
+
+    public List<AwardDTO> getAwards() {
+        return awards;
+    }
+
+    public void setAwards(List<AwardDTO> awards) {
+        this.awards = awards;
+    }
+
+    public List<FormatDTO> getFormats() {
+        return formats;
+    }
+
+    public void setFormats(List<FormatDTO> formats) {
+        this.formats = formats;
+    }
+
+    public List<MiscDTO> getMisc() {
+        return misc;
+    }
+
+    public void setMisc(List<MiscDTO> misc) {
+        this.misc = misc;
     }
 
 }
