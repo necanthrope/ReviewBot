@@ -220,7 +220,7 @@ public class ApplicationIntegrationTest {
     public void test2CanReadBooks() {
         writeDummyData();
 
-        //System.out.println("\n\n\n\n" + get("/books?length=1&offset=0").asString() + "\n\n\n\n");
+        //System.out.println("\n\n\n\n CREATED BOOK: \n" + get("/readBooks?length=1&offset=0").asString() + "\n\n\n\n");
 
         when().
                 get("/readBooks?length=1&offset=0").
@@ -232,6 +232,25 @@ public class ApplicationIntegrationTest {
                 body("[0].publisher", equalTo(_bookDTO.getPublisher())).
                 body("[0].isbn", equalTo(_bookDTO.getIsbn())).
                 body("[0].year", equalTo(_bookDTO.getYear())).
+
+                body("[0].genres[0].name", equalTo(_genreDTO1.getName())).
+                body("[0].genres[0].description", equalTo(_genreDTO1.getDescription())).
+
+                body("[0].subgenres[0].name", equalTo(_subgenreDTO1.getName())).
+                body("[0].subgenres[0].description", equalTo(_subgenreDTO1.getDescription())).
+
+                body("[0].themes[0].name", equalTo(_themeDTO1.getName())).
+                body("[0].themes[0].description", equalTo(_themeDTO1.getDescription())).
+
+                body("[0].awards[0].name", equalTo(_awardDTO1.getName())).
+                body("[0].awards[0].description", equalTo(_awardDTO1.getDescription())).
+
+                body("[0].formats[0].name", equalTo(_formatDTO1.getName())).
+                body("[0].formats[0].description", equalTo(_formatDTO1.getDescription())).
+
+                body("[0].misc[0].name", equalTo(_miscDTO1.getName())).
+                body("[0].misc[0].description", equalTo(_miscDTO1.getDescription())).
+
         log()
                 .ifError();
 
@@ -253,6 +272,25 @@ public class ApplicationIntegrationTest {
                 body("publisher", equalTo(_bookDTO.getPublisher())).
                 body("isbn", equalTo(_bookDTO.getIsbn())).
                 body("year", equalTo(_bookDTO.getYear())).
+
+                body("genres[0].name", equalTo(_genreDTO1.getName())).
+                body("genres[0].description", equalTo(_genreDTO1.getDescription())).
+
+                body("subgenres[0].name", equalTo(_subgenreDTO1.getName())).
+                body("subgenres[0].description", equalTo(_subgenreDTO1.getDescription())).
+
+                body("themes[0].name", equalTo(_themeDTO1.getName())).
+                body("themes[0].description", equalTo(_themeDTO1.getDescription())).
+
+                body("awards[0].name", equalTo(_awardDTO1.getName())).
+                body("awards[0].description", equalTo(_awardDTO1.getDescription())).
+
+                body("formats[0].name", equalTo(_formatDTO1.getName())).
+                body("formats[0].description", equalTo(_formatDTO1.getDescription())).
+
+                body("misc[0].name", equalTo(_miscDTO1.getName())).
+                body("misc[0].description", equalTo(_miscDTO1.getDescription())).
+
         log()
                 .ifError();
 
@@ -326,6 +364,16 @@ public class ApplicationIntegrationTest {
 
         if(_themeDTO1.getId() != null)
             _themeRepository.delete(_themeDTO1.getId());
+
+        if(_awardDTO1.getId() != null)
+            _awardRepository.delete(_awardDTO1.getId());
+
+        if(_formatDTO1.getId() != null)
+            _formatRepository.delete(_formatDTO1.getId());
+
+        if(_miscDTO1.getId() != null)
+            _miscRepository.delete(_miscDTO1.getId());
+
     }
 
     private void writeDummyData(){
@@ -334,9 +382,9 @@ public class ApplicationIntegrationTest {
         _genreDTO1 = _genreRepository.create(_genreDTO1);
         _subgenreDTO1 = _subgenreRepository.create(_subgenreDTO1);
         _themeDTO1 = _themeRepository.create(_themeDTO1);
-//        _awardDTO1 = _awardRepository.create(_awardDTO1);
-//        _formatDTO1 = _formatRepository.create(_formatDTO1);
-//        _miscDTO1 = _miscRepository.create(_miscDTO1);
+        _awardDTO1 = _awardRepository.create(_awardDTO1);
+        _formatDTO1 = _formatRepository.create(_formatDTO1);
+        _miscDTO1 = _miscRepository.create(_miscDTO1);
 
 
         List<GenreDTO> genreDTOs = new ArrayList<GenreDTO>();
@@ -348,10 +396,23 @@ public class ApplicationIntegrationTest {
         List<ThemeDTO> themeDTOs = new ArrayList<ThemeDTO>();
         themeDTOs.add(_themeDTO1);
 
+        List<AwardDTO> awardDTOs = new ArrayList<AwardDTO>();
+        awardDTOs.add(_awardDTO1);
+
+        List<FormatDTO> formatDTOs = new ArrayList<FormatDTO>();
+        formatDTOs.add(_formatDTO1);
+
+        List<MiscDTO> miscDTOs = new ArrayList<MiscDTO>();
+        miscDTOs.add(_miscDTO1);
+
+
         _bookDTO.setUser(_userDTO);
         _bookDTO.setGenres(genreDTOs);
         _bookDTO.setSubgenres(subgenreDTOs);
         _bookDTO.setThemes(themeDTOs);
+        _bookDTO.setAwards(awardDTOs);
+        _bookDTO.setFormats(formatDTOs);
+        _bookDTO.setMisc(miscDTOs);
 
         _bookDTO = _bookRepository.create(_bookDTO);
 

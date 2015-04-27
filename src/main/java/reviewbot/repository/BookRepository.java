@@ -7,6 +7,7 @@
 package reviewbot.repository;
 
 import org.hibernate.*;
+import org.hibernate.criterion.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.stereotype.Repository;
@@ -96,9 +97,6 @@ public class BookRepository extends AbstractRepository<Integer, Integer, Book, B
             }
         }
 
-
-
-
         getCurrentSession().save(book);
         return unwrap(book);
     }
@@ -106,8 +104,13 @@ public class BookRepository extends AbstractRepository<Integer, Integer, Book, B
     @Override
     @SuppressWarnings("unchecked")
     public List<BookDTO> readAll() {
-        List<Book> bookEntities = _entityManager.createQuery("from Book").getResultList();
+        Criteria criteria = getCurrentSession().createCriteria(Book.class);
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        criteria.addOrder(Order.asc("id"));
+
+        List<Book> bookEntities = (List<Book>)criteria.list();
         List<BookDTO> bookDTOs = new ArrayList<BookDTO>();
+
         for (Book book : bookEntities) {
             bookDTOs.add(unwrap(book));
         }
@@ -121,20 +124,35 @@ public class BookRepository extends AbstractRepository<Integer, Integer, Book, B
         final Integer len = length;
         final Integer offs = offset;
 
-        List<Book> bookEntities = (List<Book>) getHibernateTemplate().execute(new HibernateCallback() {
-            public Object doInHibernate(Session session) throws HibernateException {
-                Query q = getSessionFactory().getCurrentSession().createQuery("from Book");
-                q.setFirstResult(offs);
-                q.setMaxResults(len);
-                return q.list();
-            }
-        });
+        // Solution by MattC@stackoverflow
+        // https://stackoverflow.com/questions/11038234/pagination-with-hibernate-criteria-and-distinct-root-entity/23618190#23618190
+
+        Criteria criteria = getCurrentSession().createCriteria(Book.class);
+        Projection idCountProjection = Projections.countDistinct("id");
+        criteria.setProjection(idCountProjection);
+        int totalResultCount = ((Long)criteria.uniqueResult()).intValue();
+
+        criteria.setProjection(Projections.distinct(Projections.property("id")));
+        if (offs != null)
+            criteria.setFirstResult(offs);
+        if (len != null)
+            criteria.setMaxResults(len);
+        List uniqueSubList = criteria.list();
+
+        criteria.setProjection(null);
+        criteria.setFirstResult(0);
+        criteria.setMaxResults(Integer.MAX_VALUE);
+        criteria.add(Restrictions.in("id", uniqueSubList));
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+
+        List<Book> bookEntities = (List<Book>)criteria.list();
 
         List<BookDTO> bookDTOs = new ArrayList<BookDTO>();
         for (Book book : bookEntities) {
             bookDTOs.add(unwrap(book));
         }
         return bookDTOs;
+
 
     }
 
