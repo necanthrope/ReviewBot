@@ -23,29 +23,23 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class ReviewRepository extends AbstractRepository<Integer, Integer, Review, ReviewDTO> {
+public class ReviewRepository extends AbstractRepository<Review> {
 
     @Override
-    public ReviewDTO create(ReviewDTO review) {
+    public Review create(Review review) {
         return null;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<ReviewDTO> readAll() {
-        List<Review> reviewEntities = _entityManager.createQuery("from Review").getResultList();
-
-        List<ReviewDTO> reviewDTOs = new ArrayList<ReviewDTO>();
-        for (Review review : reviewEntities) {
-            reviewDTOs.add(unwrap(review));
-        }
-        return reviewDTOs;
+    public List<Review> readAll() {
+        return null;
     }
 
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<ReviewDTO> readRange(Integer length, Integer offset) {
+    public List<Review> readRange(Integer length, Integer offset) {
 
         final Integer len = length;
         final Integer offs = offset;
@@ -59,50 +53,28 @@ public class ReviewRepository extends AbstractRepository<Integer, Integer, Revie
             }
         });
 
-        List<ReviewDTO> reviewDTOs = new ArrayList<ReviewDTO>();
-        for (Review review : reviewEntities) {
-            reviewDTOs.add(unwrap(review));
-        }
-        return reviewDTOs;
+        return reviewEntities;
 
     }
 
     @Override
-    public ReviewDTO readOne(Integer id) {
-        return unwrap(_entityManager.find(Review.class, id));
+    public Review readOne(Integer id) {
+        return _entityManager.find(Review.class, id);
     }
 
     @Override
-    public List<ReviewDTO> readList(Integer[] ids) {
+    public List<Review> readList(Integer[] ids) {
         return null;
     }
 
     @Override
-    public void update(ReviewDTO reviewDTO) {
-        _entityManager.merge(wrap(reviewDTO));
+    public Review update(Review inReview) {
+        return null;
     }
 
     @Override
     public void delete(Integer id) {
         return;
-    }
-
-    @Override
-    protected Review wrap(ReviewDTO reviewDTO) {
-        Review review = new Review();
-
-
-
-        return review;
-    }
-
-    @Override
-    protected ReviewDTO unwrap(Review review) {
-        ReviewDTO reviewDTO = new ReviewDTO();
-
-
-
-        return reviewDTO;
     }
 
 }

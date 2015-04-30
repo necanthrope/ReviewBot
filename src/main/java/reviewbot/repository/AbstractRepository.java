@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by jtidwell on 4/7/2015.
  */
-public abstract class AbstractRepository<I, L, E, T> extends HibernateDaoSupport{
+public abstract class AbstractRepository<E> extends HibernateDaoSupport{
 
     // An EntityManager will be automatically injected from entityManagerFactory
     // setup on DatabaseConfig class.
@@ -34,21 +34,17 @@ public abstract class AbstractRepository<I, L, E, T> extends HibernateDaoSupport
         return _entityManager.unwrap(Session.class);
     }
 
-    public abstract T create(T args);
+    public abstract E create(E args);
 
-    public abstract T readOne(L id);
+    public abstract E readOne(Integer id);
 
-    public abstract List<T> readList(L[] ids);
+    public abstract List<E> readList(Integer[] ids);
 
-    public abstract List<T> readRange(I offset, I length);
+    public abstract List<E> readRange(Integer offset, Integer length);
 
-    public abstract List<T> readAll();
+    public abstract List<E> readAll();
 
-    public abstract void update(T args);
+    public abstract E update(E args);
 
-    public abstract void delete(I args);
-
-    protected abstract E wrap(T args);
-
-    protected abstract T unwrap(E args);
+    public abstract void delete(Integer args);
 }

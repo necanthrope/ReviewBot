@@ -9,7 +9,6 @@ package reviewbot.repository;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
-import reviewbot.dto.UserDTO;
 import reviewbot.entity.User;
 
 import javax.transaction.Transactional;
@@ -19,36 +18,36 @@ import javax.transaction.Transactional;
  */
 @Repository
 @Transactional
-public class UserRepository extends AbstractRepository<Integer, Integer, User, UserDTO> {
+public class UserRepository extends AbstractRepository<User> {
     @Override
-    public UserDTO create(UserDTO userDTO) {
+    public User create(User user) {
         return null;
     }
 
     @Override
-    public UserDTO readOne(Integer id) {
+    public User readOne(Integer id) {
         User user = (User) getCurrentSession().get(User.class, id);
-        return unwrap(user);
+        return user;
     }
 
     @Override
-    public List<UserDTO> readList(Integer[] ids) {
+    public List<User> readList(Integer[] ids) {
         return null;
     }
 
     @Override
-    public List<UserDTO> readRange(Integer offset, Integer length) {
+    public List<User> readRange(Integer offset, Integer length) {
         return null;
     }
 
     @Override
-    public List<UserDTO> readAll() {
+    public List<User> readAll() {
         return null;
     }
 
     @Override
-    public void update(UserDTO userDTO) {
-
+    public User update(User inUser) {
+        return null;
     }
 
     @Override
@@ -56,30 +55,4 @@ public class UserRepository extends AbstractRepository<Integer, Integer, User, U
 
     }
 
-    @Override
-    protected User wrap(UserDTO userDTO) {
-        User user = new User();
-
-        user.setId(userDTO.getId());
-        user.setUsername(userDTO.getUsername());
-        //user.setPassword(userDTO.getPassword());
-        user.setForename(userDTO.getForename());
-        user.setSurname(user.getSurname());
-        user.setAdmin(user.getAdmin());
-
-        return user;
-    }
-
-    @Override
-    protected UserDTO unwrap(User user) {
-        UserDTO userDTO = new UserDTO();
-
-        userDTO.setId(user.getId());
-        userDTO.setUsername(user.getUsername());
-        userDTO.setForename(user.getForename());
-        userDTO.setSurname(user.getSurname());
-        userDTO.setAdmin(user.getAdmin());
-
-        return userDTO;
-    }
 }

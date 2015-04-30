@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import reviewbot.dto.metadata.GenreDTO;
 import reviewbot.dto.metadata.SubgenreDTO;
 import reviewbot.dto.metadata.ThemeDTO;
-import reviewbot.repository.GenreRepository;
-import reviewbot.repository.SubgenreRepository;
-import reviewbot.repository.ThemeRepository;
+import reviewbot.service.metadata.GenreService;
+import reviewbot.service.metadata.SubgenreService;
+import reviewbot.service.metadata.ThemeService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +27,11 @@ import java.util.List;
 @RestController
 public class MetadataController {
     @Autowired
-    private GenreRepository _genreRepo;
+    private GenreService _genreService;
     @Autowired
-    private SubgenreRepository _subgenreRepo;
+    private SubgenreService _subgenreService;
     @Autowired
-    private ThemeRepository _themeRepo;
+    private ThemeService _themeService;
 
     /**
      * Forward the request for genre metadata to the GenreDAO.
@@ -46,7 +46,7 @@ public class MetadataController {
         if(idsIn == null)
             return new ArrayList<GenreDTO>();
 
-        return _genreRepo.readList(parseIds(idsIn));
+        return _genreService.readList(parseIds(idsIn));
     }
 
     /**
@@ -61,7 +61,7 @@ public class MetadataController {
         if(idsIn == null)
             return new ArrayList<SubgenreDTO>();
 
-        return _subgenreRepo.readList(parseIds(idsIn));
+        return _subgenreService.readList(parseIds(idsIn));
     }
 
     /**
@@ -76,7 +76,7 @@ public class MetadataController {
         if(idsIn == null)
             return new ArrayList<ThemeDTO>();
 
-        return _themeRepo.readList(parseIds(idsIn));
+        return _themeService.readList(parseIds(idsIn));
     }
 
     /**
@@ -87,12 +87,12 @@ public class MetadataController {
      * @param idsIn a comma separated string of id values
      * @return Integer array of requested ID values
      */
-    private Integer[] parseIds (String idsIn) {
-        List<Integer> idInteger = new ArrayList<>();
+    private Long[] parseIds (String idsIn) {
+        List<Long> idLong = new ArrayList<>();
         String[] idStrings = idsIn.split(",");
         for (String idStr : idStrings) {
-            idInteger.add(Integer.parseInt(idStr));
+            idLong.add(Long.parseLong(idStr));
         }
-        return idInteger.toArray(new Integer[0]);
+        return idLong.toArray(new Long[0]);
     }
 }

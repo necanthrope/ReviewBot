@@ -9,7 +9,7 @@ package reviewbot.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reviewbot.dto.BookDTO;
-import reviewbot.repository.BookRepository;
+import reviewbot.service.BookService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 public class BookController {
 
     @Autowired
-    private BookRepository _bookRepo;
+    private BookService _bookService;
 
     /**
      * Creates a book object in the db, then returns that book with the ID set.
@@ -30,7 +30,7 @@ public class BookController {
      */
     @RequestMapping(value="/createBook", method=RequestMethod.POST)
     public @ResponseBody BookDTO createBook(@RequestBody BookDTO bookDTO) {
-        return _bookRepo.create(bookDTO);
+        return _bookService.create(bookDTO);
     }
 
 
@@ -48,7 +48,7 @@ public class BookController {
 
         if (lengthStr.equals("all") && offsetStr.equals("all")) {
             try {
-                bookDTOs = _bookRepo.readAll();
+                bookDTOs = _bookService.readAll();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -60,7 +60,7 @@ public class BookController {
         try {
             length = Integer.parseInt(lengthStr);
             offset = Integer.parseInt(offsetStr);
-            bookDTOs = _bookRepo.readRange(length, offset);
+            bookDTOs = _bookService.readRange(length, offset);
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -75,13 +75,13 @@ public class BookController {
         if(idStr == null) {
             return new BookDTO();
         }
-        return _bookRepo.readOne(new Integer(Integer.parseInt(idStr)));
+        return _bookService.readOne(new Long(Long.parseLong(idStr)));
 
     }
 
     @RequestMapping(value="/updateBook", method=RequestMethod.POST)
     public void updateBook(@RequestBody BookDTO bookDTO) {
-        _bookRepo.update(bookDTO);
+        _bookService.update(bookDTO);
     }
 
     @RequestMapping(value="/deleteBook", method=RequestMethod.GET)
@@ -90,7 +90,7 @@ public class BookController {
         if(idStr == null)
             return;
 
-        _bookRepo.delete(Integer.parseInt(idStr));
+        _bookService.delete(Integer.parseInt(idStr));
 
     }
 

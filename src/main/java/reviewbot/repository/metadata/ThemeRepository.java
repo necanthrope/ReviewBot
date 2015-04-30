@@ -4,7 +4,7 @@
  * Based on a work at https://github.com/necanthrope/ReviewBot.
  */
 
-package reviewbot.repository;
+package reviewbot.repository.metadata;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -18,6 +18,7 @@ import reviewbot.dto.metadata.ThemeDTO;
 import reviewbot.entity.Book;
 import reviewbot.entity.GenreMap;
 import reviewbot.entity.metadata.Theme;
+import reviewbot.repository.AbstractRepository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -28,26 +29,20 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class ThemeRepository extends AbstractRepository<Integer, Integer, Theme, ThemeDTO> {
+public class ThemeRepository extends AbstractRepository<Theme> {
     @Override
-    public ThemeDTO create(ThemeDTO themeDTO) {
-        Theme theme = wrap(themeDTO);
+    public Theme create(Theme theme) {
         getCurrentSession().save(theme);
-        return unwrap(theme);
+        return theme;
     }
 
     @Override
-    public List<ThemeDTO> readAll() {
-        List<Theme> themeEntities = _entityManager.createQuery("from Theme").getResultList();
-        List<ThemeDTO> themeDTOs = new ArrayList<ThemeDTO>();
-        for (Theme theme : themeEntities) {
-            themeDTOs.add(unwrap(theme));
-        }
-        return themeDTOs;
+    public List<Theme> readAll() {
+        return _entityManager.createQuery("from Theme").getResultList();
     }
 
     @Override
-    public List<ThemeDTO> readRange(Integer offset, Integer length) {
+    public List<Theme> readRange(Integer offset, Integer length) {
 
         final Integer len = length;
         final Integer offs = offset;
@@ -61,29 +56,18 @@ public class ThemeRepository extends AbstractRepository<Integer, Integer, Theme,
             }
         });
 
-        List<ThemeDTO> themeDTOs = new ArrayList<ThemeDTO>();
-        for (Theme theme : themeEntities) {
-            themeDTOs.add(unwrap(theme));
-        }
-        return themeDTOs;
+        return themeEntities;
 
     }
 
     @Override
-    public ThemeDTO readOne(Integer id) {
-        return unwrap(readOneEntity(id));
-    }
-
-    public Theme readOneEntity(Integer id) {
-
-        if (id == null)
-            return new Theme();
+    public Theme readOne(Integer id) {
         return (Theme) getCurrentSession().get(Theme.class, id);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<ThemeDTO> readList(Integer[] idsIn) {
+    public List<Theme> readList(Integer[] idsIn) {
         final Integer[] ids = idsIn;
         List<Theme> themeEntities = (List<Theme>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
@@ -94,21 +78,18 @@ public class ThemeRepository extends AbstractRepository<Integer, Integer, Theme,
             }
         });
 
-        List<ThemeDTO> themeDTOs = new ArrayList<ThemeDTO>();
-        for (Theme theme : themeEntities) {
-            themeDTOs.add(unwrap(theme));
-        }
-        return themeDTOs;
+        return themeEntities;
     }
 
     @Override
-    public void update(ThemeDTO themeDTO) {
-        Theme theme = (Theme) getCurrentSession().get(Theme.class, themeDTO.getId());
+    public Theme update(Theme inTheme) {
+        Theme theme = (Theme) getCurrentSession().get(Theme.class, inTheme.getTheme());
 
-        theme.setName(themeDTO.getName());
-        theme.setDescription(themeDTO.getDescription());
+        theme.setName(inTheme.getName());
+        theme.setDescription(inTheme.getDescription());
 
         getCurrentSession().merge(theme);
+        return theme;
     }
 
     @Override
@@ -120,32 +101,5 @@ public class ThemeRepository extends AbstractRepository<Integer, Integer, Theme,
         }
     }
 
-    @Override
-    protected Theme wrap(ThemeDTO themeDTO) {
-        Theme theme = new Theme();
-
-        theme.setName(themeDTO.getName());
-        theme.setDescription(themeDTO.getDescription());
-
-        return theme;
-    }
-
-    @Override
-    protected ThemeDTO unwrap(Theme theme) {
-        ThemeDTO themeDTO = new ThemeDTO();
-
-        themeDTO.setId(theme.getTheme());
-        themeDTO.setName(theme.getName());
-        themeDTO.setDescription(theme.getDescription());
-
-        return themeDTO;
-    }
-
-    public GenreMap wrapMapping (Book book, ThemeDTO themeDTO) {
-        GenreMap genreMap = new GenreMap();
-        genreMap.setBook(book);
-        genreMap.setTheme(readOneEntity(themeDTO.getId()));
-        return genreMap;
-    }
 
 }

@@ -1,4 +1,4 @@
-package reviewbot.repository;
+package reviewbot.repository.metadata;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -23,27 +23,21 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class MiscRepository  extends AbstractRepository<Integer, Integer, Misc, MiscDTO> {
+public class MiscRepository  extends AbstractRepository<Misc> {
 
     @Override
-    public MiscDTO create(MiscDTO miscDTO) {
-        Misc misc = wrap(miscDTO);
+    public Misc create(Misc misc) {
         getCurrentSession().save(misc);
-        return unwrap(misc);
+        return misc;
     }
 
     @Override
-    public List<MiscDTO> readAll() {
-        List<Misc> miscEntities = _entityManager.createQuery("from Misc").getResultList();
-        List<MiscDTO> miscDTOs = new ArrayList<MiscDTO>();
-        for (Misc misc : miscEntities) {
-            miscDTOs.add(unwrap(misc));
-        }
-        return miscDTOs;
+    public List<Misc> readAll() {
+        return _entityManager.createQuery("from Misc").getResultList();
     }
 
     @Override
-    public List<MiscDTO> readRange(Integer offset, Integer length) {
+    public List<Misc> readRange(Integer offset, Integer length) {
 
         final Integer len = length;
         final Integer offs = offset;
@@ -57,29 +51,18 @@ public class MiscRepository  extends AbstractRepository<Integer, Integer, Misc, 
             }
         });
 
-        List<MiscDTO> miscDTOs = new ArrayList<MiscDTO>();
-        for (Misc misc : miscEntities) {
-            miscDTOs.add(unwrap(misc));
-        }
-        return miscDTOs;
+        return miscEntities;
 
     }
 
     @Override
-    public MiscDTO readOne(Integer id) {
-        return unwrap(readOneEntity(id));
-    }
-
-    public Misc readOneEntity(Integer id) {
-
-        if (id == null)
-            return new Misc();
+    public Misc readOne(Integer id) {
         return (Misc) getCurrentSession().get(Misc.class, id);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<MiscDTO> readList(Integer[] idsIn) {
+    public List<Misc> readList(Integer[] idsIn) {
         final Integer[] ids = idsIn;
         List<Misc> miscEntities = (List<Misc>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
@@ -90,21 +73,18 @@ public class MiscRepository  extends AbstractRepository<Integer, Integer, Misc, 
             }
         });
 
-        List<MiscDTO> miscDTOs = new ArrayList<MiscDTO>();
-        for (Misc misc : miscEntities) {
-            miscDTOs.add(unwrap(misc));
-        }
-        return miscDTOs;
+        return miscEntities;
     }
 
     @Override
-    public void update(MiscDTO miscDTO) {
-        Misc misc = (Misc) getCurrentSession().get(Misc.class, miscDTO.getId());
+    public Misc update(Misc inMisc) {
+        Misc misc = (Misc) getCurrentSession().get(Misc.class, inMisc.getMisc());
 
-        misc.setName(miscDTO.getName());
-        misc.setDescription(miscDTO.getDescription());
+        misc.setName(inMisc.getName());
+        misc.setDescription(inMisc.getDescription());
 
         getCurrentSession().merge(misc);
+        return misc;
     }
 
     @Override
@@ -114,34 +94,6 @@ public class MiscRepository  extends AbstractRepository<Integer, Integer, Misc, 
             getCurrentSession().delete(misc);
             getCurrentSession().flush();
         }
-    }
-
-    @Override
-    protected Misc wrap(MiscDTO miscDTO) {
-        Misc misc = new Misc();
-
-        misc.setName(miscDTO.getName());
-        misc.setDescription(miscDTO.getDescription());
-
-        return misc;
-    }
-
-    @Override
-    protected MiscDTO unwrap(Misc misc) {
-        MiscDTO miscDTO = new MiscDTO();
-
-        miscDTO.setId(misc.getMisc());
-        miscDTO.setName(misc.getName());
-        miscDTO.setDescription(misc.getDescription());
-
-        return miscDTO;
-    }
-
-    public GenreMap wrapMapping (Book book, MiscDTO miscDTO) {
-        GenreMap genreMap = new GenreMap();
-        genreMap.setBook(book);
-        genreMap.setMisc(readOneEntity(miscDTO.getId()));
-        return genreMap;
     }
 
 }

@@ -4,7 +4,7 @@
  * Based on a work at https://github.com/necanthrope/ReviewBot.
  */
 
-package reviewbot.repository;
+package reviewbot.repository.metadata;
 
 import org.hibernate.*;
 import org.hibernate.criterion.Order;
@@ -16,6 +16,7 @@ import reviewbot.dto.metadata.GenreDTO;
 import reviewbot.entity.Book;
 import reviewbot.entity.GenreMap;
 import reviewbot.entity.metadata.Genre;
+import reviewbot.repository.AbstractRepository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -26,27 +27,21 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class GenreRepository extends AbstractRepository<Integer, Integer, Genre, GenreDTO>{
+public class GenreRepository extends AbstractRepository<Genre> {
 
     @Override
-    public GenreDTO create(GenreDTO genreDTO) {
-        Genre genre = wrap(genreDTO);
+    public Genre create(Genre genre) {
         getCurrentSession().save(genre);
-        return unwrap(genre);
+        return genre;
     }
 
     @Override
-    public List<GenreDTO> readAll() {
-        List<Genre> genreEntities = _entityManager.createQuery("from Genre").getResultList();
-        List<GenreDTO> genreDTOs = new ArrayList<GenreDTO>();
-        for (Genre genre : genreEntities) {
-            genreDTOs.add(unwrap(genre));
-        }
-        return genreDTOs;
+    public List<Genre> readAll() {
+        return _entityManager.createQuery("from Genre").getResultList();
     }
 
     @Override
-    public List<GenreDTO> readRange(Integer offset, Integer length) {
+    public List<Genre> readRange(Integer offset, Integer length) {
 
         final Integer len = length;
         final Integer offs = offset;
@@ -60,29 +55,18 @@ public class GenreRepository extends AbstractRepository<Integer, Integer, Genre,
             }
         });
 
-        List<GenreDTO> genreDTOs = new ArrayList<GenreDTO>();
-        for (Genre genre : genreEntities) {
-            genreDTOs.add(unwrap(genre));
-        }
-        return genreDTOs;
+        return genreEntities;
 
     }
 
     @Override
-    public GenreDTO readOne(Integer id) {
-        return unwrap(readOneEntity(id));
-    }
-
-    public Genre readOneEntity(Integer id) {
-
-        if (id == null)
-            return new Genre();
+    public Genre readOne(Integer id) {
         return (Genre) getCurrentSession().get(Genre.class, id);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<GenreDTO> readList(Integer[] idsIn) {
+    public List<Genre> readList(Integer[] idsIn) {
         final Integer[] ids = idsIn;
         List<Genre> genreEntities = (List<Genre>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
@@ -92,22 +76,18 @@ public class GenreRepository extends AbstractRepository<Integer, Integer, Genre,
                 return criteria.list();
             }
         });
-
-        List<GenreDTO> genreDTOs = new ArrayList<GenreDTO>();
-        for (Genre genre : genreEntities) {
-            genreDTOs.add(unwrap(genre));
-        }
-        return genreDTOs;
+        return genreEntities;
     }
 
     @Override
-    public void update(GenreDTO genreDTO) {
-        Genre genre = (Genre) getCurrentSession().get(Genre.class, genreDTO.getId());
+    public Genre update(Genre inGenre) {
+        Genre genre = (Genre) getCurrentSession().get(Genre.class, inGenre.getId());
 
-        genre.setName(genreDTO.getName());
-        genre.setDescription(genreDTO.getDescription());
+        genre.setName(inGenre.getName());
+        genre.setDescription(inGenre.getDescription());
 
         getCurrentSession().merge(genre);
+        return genre;
     }
 
     @Override
@@ -119,31 +99,4 @@ public class GenreRepository extends AbstractRepository<Integer, Integer, Genre,
         }
     }
 
-    @Override
-    protected Genre wrap(GenreDTO genreDTO) {
-        Genre genre = new Genre();
-
-        genre.setName(genreDTO.getName());
-        genre.setDescription(genreDTO.getDescription());
-
-        return genre;
-    }
-
-    @Override
-    protected GenreDTO unwrap(Genre genre) {
-        GenreDTO genreDTO = new GenreDTO();
-
-        genreDTO.setId(genre.getId());
-        genreDTO.setName(genre.getName());
-        genreDTO.setDescription(genre.getDescription());
-
-        return genreDTO;
-    }
-
-    public GenreMap wrapMapping (Book book, GenreDTO genreDTO) {
-        GenreMap genreMap = new GenreMap();
-        genreMap.setBook(book);
-        genreMap.setGenre(readOneEntity(genreDTO.getId()));
-        return genreMap;
-    }
 }

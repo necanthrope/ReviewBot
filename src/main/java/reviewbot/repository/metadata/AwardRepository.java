@@ -1,4 +1,4 @@
-package reviewbot.repository;
+package reviewbot.repository.metadata;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -23,27 +23,21 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class AwardRepository  extends AbstractRepository<Integer, Integer, Award, AwardDTO>{
+public class AwardRepository  extends AbstractRepository<Award>{
 
     @Override
-    public AwardDTO create(AwardDTO awardDTO) {
-        Award award = wrap(awardDTO);
+    public Award create(Award award) {
         getCurrentSession().save(award);
-        return unwrap(award);
+        return award;
     }
 
     @Override
-    public List<AwardDTO> readAll() {
-        List<Award> awardEntities = _entityManager.createQuery("from Award").getResultList();
-        List<AwardDTO> awardDTOs = new ArrayList<AwardDTO>();
-        for (Award award : awardEntities) {
-            awardDTOs.add(unwrap(award));
-        }
-        return awardDTOs;
+    public List<Award> readAll() {
+        return _entityManager.createQuery("from Award").getResultList();
     }
 
     @Override
-    public List<AwardDTO> readRange(Integer offset, Integer length) {
+    public List<Award> readRange(Integer offset, Integer length) {
 
         final Integer len = length;
         final Integer offs = offset;
@@ -57,29 +51,17 @@ public class AwardRepository  extends AbstractRepository<Integer, Integer, Award
             }
         });
 
-        List<AwardDTO> awardDTOs = new ArrayList<AwardDTO>();
-        for (Award award : awardEntities) {
-            awardDTOs.add(unwrap(award));
-        }
-        return awardDTOs;
+        return awardEntities;
 
     }
 
     @Override
-    public AwardDTO readOne(Integer id) {
-        return unwrap(readOneEntity(id));
-    }
-
-    public Award readOneEntity(Integer id) {
-
-        if (id == null)
-            return new Award();
+    public Award readOne(Integer id) {
         return (Award) getCurrentSession().get(Award.class, id);
     }
-
     @Override
     @SuppressWarnings("unchecked")
-    public List<AwardDTO> readList(Integer[] idsIn) {
+    public List<Award> readList(Integer[] idsIn) {
         final Integer[] ids = idsIn;
         List<Award> awardEntities = (List<Award>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
@@ -89,22 +71,19 @@ public class AwardRepository  extends AbstractRepository<Integer, Integer, Award
                 return criteria.list();
             }
         });
-
-        List<AwardDTO> awardDTOs = new ArrayList<AwardDTO>();
-        for (Award award : awardEntities) {
-            awardDTOs.add(unwrap(award));
-        }
-        return awardDTOs;
+        return awardEntities;
     }
 
     @Override
-    public void update(AwardDTO awardDTO) {
-        Award award = (Award) getCurrentSession().get(Award.class, awardDTO.getId());
+    public Award update(Award inAward) {
+        Award award = (Award) getCurrentSession().get(Award.class, inAward.getAward());
 
-        award.setName(awardDTO.getName());
-        award.setDescription(awardDTO.getDescription());
+        award.setName(inAward.getName());
+        award.setDescription(inAward.getDescription());
 
         getCurrentSession().merge(award);
+
+        return award;
     }
 
     @Override
@@ -115,36 +94,5 @@ public class AwardRepository  extends AbstractRepository<Integer, Integer, Award
             getCurrentSession().flush();
         }
     }
-
-    @Override
-    protected Award wrap(AwardDTO awardDTO) {
-        Award award = new Award();
-
-        award.setName(awardDTO.getName());
-        award.setDescription(awardDTO.getDescription());
-
-        return award;
-    }
-
-    @Override
-    protected AwardDTO unwrap(Award award) {
-        AwardDTO awardDTO = new AwardDTO();
-
-        awardDTO.setId(award.getAward());
-        awardDTO.setName(award.getName());
-        awardDTO.setDescription(award.getDescription());
-
-        return awardDTO;
-    }
-
-    public GenreMap wrapMapping (Book book, AwardDTO awardDTO) {
-        GenreMap genreMap = new GenreMap();
-        genreMap.setBook(book);
-        genreMap.setAward(readOneEntity(awardDTO.getId()));
-        return genreMap;
-    }
-
-
-
 
 }

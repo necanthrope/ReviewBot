@@ -7,6 +7,7 @@
 package reviewbot;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,11 +18,13 @@ import org.springframework.context.annotation.Configuration;
 
 @SpringBootApplication
 @Configuration
+@EnableAutoConfiguration
 //The ComponentScan annotation tells spring where to look for valid component classes.
 //The app will fail without at least .controllers.
 @ComponentScan({
         "reviewbot.controllers",
         "reviewbot.repository",
+        "reviewbot.service",
         "reviewbot.configuration"})
 
 public class Application {

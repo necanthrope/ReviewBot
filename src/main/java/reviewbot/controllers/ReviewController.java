@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reviewbot.dto.ReviewDTO;
-import reviewbot.repository.ReviewRepository;
+import reviewbot.service.ReviewService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 public class ReviewController {
     @Autowired
-    private ReviewRepository _reviewRepo;
+    private ReviewService _reviewService;
 
     @RequestMapping(value="/readAllReviews", method=RequestMethod.GET, produces="application/json")
     public List<ReviewDTO> readReviews() {
@@ -31,7 +31,7 @@ public class ReviewController {
         List<ReviewDTO> reviewDTOs = new ArrayList<ReviewDTO>();
 
         try {
-            reviewDTOs = _reviewRepo.readAll();
+            reviewDTOs = _reviewService.readAll();
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -46,7 +46,7 @@ public class ReviewController {
         if(idStr == null) {
             return new ReviewDTO();
         }
-        return _reviewRepo.readOne(new Integer(Integer.parseInt(idStr)));
+        return _reviewService.readOne(new Long(Long.parseLong(idStr)));
 
     }
 }

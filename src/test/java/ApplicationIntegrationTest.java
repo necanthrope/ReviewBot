@@ -30,9 +30,11 @@ import javax.transaction.Transactional;
 import reviewbot.Application;
 import reviewbot.dto.*;
 import reviewbot.dto.metadata.*;
-import reviewbot.repository.*;
 
 import org.json.simple.JSONObject;
+import reviewbot.service.BookService;
+import reviewbot.service.UserService;
+import reviewbot.service.metadata.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,28 +53,28 @@ import java.util.List;
 public class ApplicationIntegrationTest {
 
     @Autowired
-    private UserRepository _userRepository;
+    private UserService _userService;
 
     @Autowired
-    private BookRepository _bookRepository;
+    private BookService _bookService;
 
     @Autowired
-    private GenreRepository _genreRepository;
+    private GenreService _genreService;
 
     @Autowired
-    private SubgenreRepository _subgenreRepository;
+    private SubgenreService _subgenreService;
 
     @Autowired
-    private ThemeRepository _themeRepository;
+    private ThemeService _themeService;
 
     @Autowired
-    private AwardRepository _awardRepository;
+    private AwardService _awardService;
 
     @Autowired
-    private FormatRepository _formatRepository;
+    private FormatService _formatService;
 
     @Autowired
-    private MiscRepository _miscRepository;
+    private MiscService _miscService;
 
     private BookDTO _bookDTO;
     private GenreDTO _genreDTO1;
@@ -101,7 +103,7 @@ public class ApplicationIntegrationTest {
         _formatDTO1 = TestDataGenerator.createFormat();
         _miscDTO1 = TestDataGenerator.createMisc();
 
-        _userDTO = _userRepository.readOne(1);
+        _userDTO = _userService.readOne(new Long(1));
 
     }
 
@@ -109,14 +111,14 @@ public class ApplicationIntegrationTest {
     public void test1CanCreateBook() {
 
         //System.out.println("\n\n\nBOOK:" + _bookDTO.getId() + ":" + _bookDTO.getTitle() + "\n\n\n");
-        //_userDTO = _userRepository.readOne(1);
+        //_userDTO = _userService.readOne(1);
 
-        _genreDTO1 = _genreRepository.create(_genreDTO1);
-        _subgenreDTO1 = _subgenreRepository.create(_subgenreDTO1);
-        _themeDTO1 = _themeRepository.create(_themeDTO1);
-        _awardDTO1 = _awardRepository.create(_awardDTO1);
-        _formatDTO1 = _formatRepository.create(_formatDTO1);
-        _miscDTO1 = _miscRepository.create(_miscDTO1);
+        _genreDTO1 = _genreService.create(_genreDTO1);
+        _subgenreDTO1 = _subgenreService.create(_subgenreDTO1);
+        _themeDTO1 = _themeService.create(_themeDTO1);
+        _awardDTO1 = _awardService.create(_awardDTO1);
+        _formatDTO1 = _formatService.create(_formatDTO1);
+        _miscDTO1 = _miscService.create(_miscDTO1);
 
 
         JSONObject userJson = new JSONObject();
@@ -303,6 +305,10 @@ public class ApplicationIntegrationTest {
         BookDTO book2 = TestDataGenerator.createBook();
         book2.setUser(_userDTO);
 
+        JSONObject userJson = new JSONObject();
+        userJson.put("id", _userDTO.getId());
+        userJson.put("username", _userDTO.getUsername());
+
         JSONObject bookJson = new JSONObject();
         bookJson.put("id", _bookDTO.getId());
 
@@ -311,6 +317,8 @@ public class ApplicationIntegrationTest {
         bookJson.put("publisher", book2.getPublisher());
         bookJson.put("isbn", book2.getIsbn());
         bookJson.put("year", book2.getYear());
+
+        bookJson.put("user", userJson);
 
         given().
                 contentType(JSON).
@@ -354,37 +362,37 @@ public class ApplicationIntegrationTest {
     @After
     public void cleanUp() {
         if (needsCleaning) {
-            _bookRepository.delete(_bookDTO.getId());
+            _bookService.delete(_bookDTO.getId());
         }
         if (_genreDTO1.getId() != null)
-            _genreRepository.delete(_genreDTO1.getId());
+            _genreService.delete(_genreDTO1.getId());
 
         if (_subgenreDTO1.getId() != null)
-            _subgenreRepository.delete(_subgenreDTO1.getId());
+            _subgenreService.delete(_subgenreDTO1.getId());
 
         if(_themeDTO1.getId() != null)
-            _themeRepository.delete(_themeDTO1.getId());
+            _themeService.delete(_themeDTO1.getId());
 
         if(_awardDTO1.getId() != null)
-            _awardRepository.delete(_awardDTO1.getId());
+            _awardService.delete(_awardDTO1.getId());
 
         if(_formatDTO1.getId() != null)
-            _formatRepository.delete(_formatDTO1.getId());
+            _formatService.delete(_formatDTO1.getId());
 
         if(_miscDTO1.getId() != null)
-            _miscRepository.delete(_miscDTO1.getId());
+            _miscService.delete(_miscDTO1.getId());
 
     }
 
     private void writeDummyData(){
 
         // Create the metadata objects in the db, so the DTOs have valid IDs.
-        _genreDTO1 = _genreRepository.create(_genreDTO1);
-        _subgenreDTO1 = _subgenreRepository.create(_subgenreDTO1);
-        _themeDTO1 = _themeRepository.create(_themeDTO1);
-        _awardDTO1 = _awardRepository.create(_awardDTO1);
-        _formatDTO1 = _formatRepository.create(_formatDTO1);
-        _miscDTO1 = _miscRepository.create(_miscDTO1);
+        _genreDTO1 = _genreService.create(_genreDTO1);
+        _subgenreDTO1 = _subgenreService.create(_subgenreDTO1);
+        _themeDTO1 = _themeService.create(_themeDTO1);
+        _awardDTO1 = _awardService.create(_awardDTO1);
+        _formatDTO1 = _formatService.create(_formatDTO1);
+        _miscDTO1 = _miscService.create(_miscDTO1);
 
 
         List<GenreDTO> genreDTOs = new ArrayList<GenreDTO>();
@@ -414,7 +422,7 @@ public class ApplicationIntegrationTest {
         _bookDTO.setFormats(formatDTOs);
         _bookDTO.setMisc(miscDTOs);
 
-        _bookDTO = _bookRepository.create(_bookDTO);
+        _bookDTO = _bookService.create(_bookDTO);
 
     }
 
