@@ -24,7 +24,7 @@ CREATE TABLE `books` (
   `publisher` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `isbn` varchar(13) COLLATE utf8_unicode_ci DEFAULT NULL,
   `genre` tinyint(4) DEFAULT NULL,
-  `id` tinyint(4) DEFAULT NULL,
+  `subgenre` tinyint(4) DEFAULT NULL,
   `year` varchar(4) COLLATE utf8_unicode_ci DEFAULT NULL,
   `master_id` varchar(127) COLLATE utf8_unicode_ci DEFAULT NULL,
   `free` varchar(5) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -107,10 +107,10 @@ CREATE TABLE `image_map` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Table structure for table `id`
+-- Table structure for table `misc`
 --
 
-CREATE TABLE `id` (
+CREATE TABLE `misc` (
   `id` int(11) NOT NULL DEFAULT '0',
   `name` varchar(30) DEFAULT NULL,
   `description` text,
