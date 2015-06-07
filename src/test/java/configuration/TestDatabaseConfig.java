@@ -24,9 +24,9 @@ public class TestDatabaseConfig {
     @Value("${db.password}")
     private String DB_PASSWORD;
 
-    //@Value("${db.url}")
+    @Value("${db.url}")
     private String DB_URL =
-            "jdbc:mysql://192.168.1.52:3306/reviewbot_test?zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8";
+            "jdbc:mysql://localhost/reviewbot_test?zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8";
 
     @Value("${db.username}")
     private String DB_USERNAME;
