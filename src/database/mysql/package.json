@@ -3,7 +3,7 @@
 	"version":"1.0.0",
 	"license":"Attribution-NonCommercial-ShareAlike 4.0",
 	"devDependencies":{
-		"async" : "0.9.0",
-		"db-migrate":"0.9.13"
+		"async" : "1.2.0",
+		"db-migrate":"0.9.16"
 		}
 	}
